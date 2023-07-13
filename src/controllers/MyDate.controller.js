@@ -1,5 +1,6 @@
 const MyDate = {};
-const Task = require('../models/Task')
+const Task = require('../models/Task');
+const TaskDetail = require('../models/TaskDetail');
 
 MyDate.handleReadTask = Task.getTasks;
 
@@ -40,5 +41,7 @@ MyDate.handleUpdateTask = async (req, res) => {
         res.json(err);
     }
 }
+
+MyDate.readTasksDetail = TaskDetail.getTaskDetail;
 
 module.exports = MyDate;

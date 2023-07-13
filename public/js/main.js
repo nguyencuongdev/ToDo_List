@@ -145,13 +145,12 @@ function createTask(
     List,
     id,
     name,
-    description = '',
     important = false,
-    status = false,
 ) {
     let myTaskItem = document.createElement('div');
     myTaskItem.setAttribute('data-index', id);
     myTaskItem.classList.add('content_mytask-item');
+    myTaskItem.setAttribute('important', important)
     myTaskItem.innerHTML = `  <div class="content_mytask-group">
                                 <button class="updatefinish" onclick="updatefinish(event)">
                                     <i class="fi fi-rr-circle" id="finish-icon"></i>
@@ -190,12 +189,11 @@ function createTaskFinish(
     List,
     id,
     name,
-    description = '',
     important = false,
-    status = false,
 ) {
     let myTaskItem = document.createElement('div');
     myTaskItem.setAttribute('data-index', id);
+    myTaskItem.setAttribute('important', important)
     myTaskItem.classList.add('content_mytask-item');
     myTaskItem.innerHTML = `  <div class="content_mytask-group">
                                 <button class="not-update-finish" onclick="updateTaskNotFinish(event)">
@@ -233,17 +231,19 @@ function createTaskFinish(
 }
 
 function addTaskFinished(element) {
-    const name = element.querySelector('.content_mytask-title').textContent;
+    const name = element.querySelector('.content_mytask-title')?.textContent;
     const id = element.getAttribute('data-index');
-    createTaskFinish(listTasksComplated, id, name);
+    const important = element.getAttribute('important');
+    createTaskFinish(listTasksComplated, id, name, important);
     listTasksComplated.classList.remove('hidden');
     playTinhTinh();
 }
 
 function addTaskNotFinish(element) {
-    const task = element.querySelector('.content_mytask-title');
-    let id = element.getAttribute('data-index');
-    createTask(myTaskList, id, task.textContent);
+    const name = element.querySelector('.content_mytask-title')?.textContent;
+    const id = element.getAttribute('data-index');
+    const important = element.getAttribute('important');
+    createTask(myTaskList, id, name, important);
 }
 
 async function updatefinish(event) {
@@ -391,7 +391,7 @@ async function showDetailTask(event) {
             description = task.description;
         })
         .catch(err => console.log(err));
-    let idTaskDetail = ListDetail[ListDetail.length - 1]?.idTaskDetail || 0;
+    let idTaskDetail = ListDetail[ListDetail?.length - 1]?.idTaskDetail ?? 0;
 
     //lấy ra form add task next và list task next
     const formAddTasksNext = formDetailTask.querySelector('#form_mytask-next');
@@ -608,14 +608,12 @@ window.addEventListener('load', async function () {
                     listTasksComplated,
                     task.id,
                     task.name,
-                    false,
                     task.important,
                 )
                 : createTask(
                     myTaskList,
                     task.id,
                     task.name,
-                    false,
                     task.important,
                 );
         });

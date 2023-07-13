@@ -6,7 +6,12 @@ router.get('/', (req, res) => {
     res.render('mydate');
 })
 router.get('/mydateapi', MyDate.handleReadTask);
-router.delete('/mydateapi/:id', MyDate.handDeleteTask);
+
 router.post('/mydateapi', MyDate.handleCreateTask);
+
+router.delete('/mydateapi/:id', MyDate.handDeleteTask);
+
 router.patch('/mydateapi/:id', MyDate.handleUpdateTask);
+
+router.get('/mydateapi/:id', MyDate.readTasksDetail);
 module.exports = router;
