@@ -1,18 +1,13 @@
 const MyDate = {};
-const Task = require('../models/Task');
-const database = require('../common/databse');
-const connection = database.getConnection();
+const Task = require('../models/Task')
 
-MyDate.getIndex = async (req, res) => {
-    connection.query('SELECT * FROM tasks', (err, result) => {
-        (!err) ? res.json(result) : res.json(err);
-    });
-}
+MyDate.handleReadTask = Task.getTasks;
 
 MyDate.handleCreateTask = async (req, res) => {
     try {
         let task = req.body;
         await Task.addTask(task);
+        res.render('mydate');
     }
     catch (err) {
         res.json(err);
@@ -23,16 +18,23 @@ MyDate.handDeleteTask = async (req, res) => {
     try {
         let id = req.params.id;
         await Task.deleteTask(id);
+        res.render('mydate');
     }
     catch (err) {
         res.json(err);
     }
 }
 
-MyDate.handleUpdateTaskStatus = async (req, res) => {
+MyDate.handleUpdateTask = async (req, res) => {
     try {
-        let id = req.params.id, status = req.body.status;
-        await Task.updateTaskStatus(id, status);
+        let id = req.params.id;
+        let important = req.body.important ?? false;
+        let status = req.body.status ?? false;
+        let name = req.body.name ?? false;
+        if (important) await Task.updateTaskImportant(id, important);
+        else if (name) await Task.updateTaskName(id, name);
+        else await Task.updateTaskStatus(id, status);
+        res.render('mydate');
     }
     catch (err) {
         res.json(err);

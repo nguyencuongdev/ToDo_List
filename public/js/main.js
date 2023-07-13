@@ -257,6 +257,7 @@ async function updatefinish(event) {
         addTaskFinished(elementTask);
         let id = elementTask.getAttribute('data-index');
         //call API to server update status task
+        elementTask.remove();
         await fetch(url + '/' + id, {
             method: 'PATCH',
             headers: {
@@ -264,7 +265,6 @@ async function updatefinish(event) {
             },
             body: JSON.stringify({ status: true }),
         });
-        elementTask.remove();
     } catch (error) {
         console.log('Lỗi update task');
     }
