@@ -9,14 +9,14 @@ MyDate.getIndex = async (req, res) => {
     });
 }
 
-MyDate.createTask = async (req, res) => {
-    let task = await req.body;
-    if (!task) {
-        res.reder('/mydate');
-    }
-    else {
+MyDate.handleCreateTask = async (req, res) => {
+    try {
+        let task = req.body;
+        console.log(task);
         await Task.addTask(task);
-        res.render('mydate');
+    }
+    catch (err) {
+        res.json(err);
     }
 }
 

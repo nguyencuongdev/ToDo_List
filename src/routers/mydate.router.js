@@ -6,6 +6,6 @@ router.get('/', (req, res) => {
     res.render('mydate');
 })
 router.get('/mydateapi', MyDate.getIndex);
-router.post('/', MyDate.createTask);
+router.post('/mydateapi', MyDate.handleCreateTask);
 
 module.exports = router;
