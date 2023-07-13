@@ -1,0 +1,43 @@
+<div class="content">
+    <div class="content_title">
+        <div class="content_title-date">
+            <i class="fi fi-rr-apps menu hidden" id="menu_hidden"></i>
+            <div class="content_title-date-item">
+                <div>
+                    <i class="fi fi-rr-cloud-sun"></i>
+                    <h4>Ngày hôm nay</h4>
+                </div>
+                <div class="content_title-date-detail">
+                    <p style="margin: 6px 0 0 2px" id="showDateNow">
+                        Thứ 2, ngày 2 tháng 6, năm 2023
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content_group">
+        <form class="content_groud-add" action="" method="post" id="form-add-task">
+            <div class="content_groud-add-tilte">
+                <i class="fi fi-rr-circle"></i>
+                <input autocomplete="off" id="input_task" name="name" placeholder="Thêm tác vụ" type="text" />
+            </div>
+            <div class="content_groud-addd-button">
+                <div>
+                    <input type="date" name="date" id="date" />
+                </div>
+                <input type="submit" value="Thêm" id="add" />
+            </div>
+        </form>
+    </div>
+    <div class="content_mytask">
+        <div class="content_mytask-list"></div>
+        <div class="content_mytask-complate">
+            <div class="content_mytask-complate-title">
+                <img src="/static/imgs/angle-small-right.png" alt="" />
+                <h4>Đã hoàn thành</h4>
+                <span id="count"></span>
+            </div>
+            <div class="content_mytask-compate-list hidden"></div>
+        </div>
+    </div>
+</div>

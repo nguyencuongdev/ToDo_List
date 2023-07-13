@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="shortcut icon" href="/static/imgs/favicon.png" type="image/x-icon">
+    <!-- <link rel="stylesheet" href="/static/font/uicons-regular-rounded/css/uicons-regular-rounded.css"> -->
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" />
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>ToDo-List</title>
+</head>
+
+<body>
+    <div class="app">
+        <%- include('./partials/header.ejs') %>
+            <main class="container">
+                <%- include('./partials/sidebar.ejs') %>
+                    <%- body %>
+                        <%- include('./partials/formdetail.ejs') %>
+            </main>
+            <%- include('./partials/formupdate.ejs') %>
+    </div>
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>
