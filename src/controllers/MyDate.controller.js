@@ -12,8 +12,27 @@ MyDate.getIndex = async (req, res) => {
 MyDate.handleCreateTask = async (req, res) => {
     try {
         let task = req.body;
-        console.log(task);
         await Task.addTask(task);
+    }
+    catch (err) {
+        res.json(err);
+    }
+}
+
+MyDate.handDeleteTask = async (req, res) => {
+    try {
+        let id = req.params.id;
+        await Task.deleteTask(id);
+    }
+    catch (err) {
+        res.json(err);
+    }
+}
+
+MyDate.handleUpdateTaskStatus = async (req, res) => {
+    try {
+        let id = req.params.id, status = req.body.status;
+        await Task.updateTaskStatus(id, status);
     }
     catch (err) {
         res.json(err);

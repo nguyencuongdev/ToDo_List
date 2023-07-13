@@ -310,12 +310,12 @@ formAddTask.onsubmit = async function (e) {
                 important: false,
                 status: false,
             };
+            inputTaskElement.value = '';
             await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(task),
             });
-            inputTaskElement.value = '';
         }
     } catch (err) {
         alert('Lỗi thêm task');
@@ -479,12 +479,10 @@ async function showDetailTask(event) {
                     ListDetail,
                 }),
             });
-            alert('Them thành công');
             //giải phóng bộ nhớ
             ListDetail = [];
             ListDetailTemp = [];
         } catch (err) {
-            alert('Lỗi thêm task next');
         }
     });
 }
@@ -574,11 +572,11 @@ async function deleteTask(event) {
         }
         const id = taskElement.getAttribute('data-index');
         //call api to server to delete task
+        taskElement.remove(); // delete task in UI
         await fetch(url + '/' + id, {
             method: 'DELETE',
         });
         alert('Xóa thành công!');
-        taskElement.remove(); // delete task in UI
     } catch (err) {
         console.log(err);
     }
@@ -587,7 +585,6 @@ async function deleteTask(event) {
 function showButtonTask(event) {
     event.preventDefault();
     const taskElement = event.target;
-    console.log(taskElement);
     const buttonTask = taskElement.querySelector('.content_mytask-item-button');
     buttonTask.style.display = 'block';
     function hiddenButtonTask() {
@@ -623,6 +620,5 @@ window.addEventListener('load', async function () {
                 );
         });
     } catch (err) {
-        console.log(err);
     }
 });
