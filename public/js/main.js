@@ -299,7 +299,7 @@ async function updateTaskNotFinish(event) {
 formAddTask.onsubmit = async function (e) {
     e.preventDefault();
     try {
-        const inputTaskElement = document.querySelector('#input_task');
+        const inputTaskElement = formAddTask.querySelector('#input_task');
         if (inputTaskElement.value) {
             idTask++;
             createTask(myTaskList, idTask, inputTaskElement.value); //create task on UI
@@ -318,7 +318,7 @@ formAddTask.onsubmit = async function (e) {
             });
         }
     } catch (err) {
-        alert('Lỗi thêm task');
+        console.log('Lỗi add task');
     }
 };
 const closeFormDetailTask = formDetailTask.querySelector(
@@ -483,6 +483,7 @@ async function showDetailTask(event) {
             ListDetail = [];
             ListDetailTemp = [];
         } catch (err) {
+            console.log('Lỗi add tasks next');
         }
     });
 }
@@ -549,7 +550,7 @@ function editTask(event) {
                 errElement.textContent = 'Tên task không được trùng với tên cũ';
             }
         } catch (err) {
-            alert('Cập nhật thất bại!');
+            console.log('Cập nhật thất bại!');
         }
     });
 
@@ -576,9 +577,8 @@ async function deleteTask(event) {
         await fetch(url + '/' + id, {
             method: 'DELETE',
         });
-        alert('Xóa thành công!');
     } catch (err) {
-        console.log(err);
+        console.log('Lỗi xóa task thất bại');
     }
 }
 
@@ -617,6 +617,8 @@ window.addEventListener('load', async function () {
                     task.important,
                 );
         });
+        console.log('Tải task thành công!');
     } catch (err) {
+        console.log('Load tasks thất bại');
     }
 });

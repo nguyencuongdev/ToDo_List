@@ -1,5 +1,4 @@
 const TaskDetail = {};
-const { clearConfigCache } = require('prettier');
 const db = require('../common/databse.js');
 const connection = db.getConnection();
 
@@ -11,7 +10,14 @@ TaskDetail.getTaskDetail = async (req, res) => {
         const listTaskDetail = [];
         let task;
         connection.query(selectTask_sql, (err, result) => {
-            (err) ? res.json(err) : task = { ...result[0] };
+            if (err)
+                res.json(err)
+            else if (result.length > 0) {
+                task = { ...result[0] };
+            }
+            else {
+                task = {};
+            }
         })
 
         connection.query(selectListTaskDetail_sql, (err, result) => {
@@ -19,9 +25,8 @@ TaskDetail.getTaskDetail = async (req, res) => {
                 result.forEach((item) => {
                     listTaskDetail.push({ ...item });
                 })
-
             task.ListDetail = listTaskDetail;
-            res.json(task);
+            res.status(200).json(task);
         })
     }
 }

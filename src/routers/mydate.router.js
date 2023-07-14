@@ -9,7 +9,7 @@ router.get('/mydateapi', MyDate.handleReadTask);
 
 router.post('/mydateapi', MyDate.handleCreateTask);
 
-router.delete('/mydateapi/:id', MyDate.handDeleteTask);
+router.delete('/mydateapi/:id', MyDate.handleDeleteTask);
 
 router.patch('/mydateapi/:id', MyDate.handleUpdateTask);
 
