@@ -4,18 +4,28 @@
     </div>
     <ul class="sidebar_list">
         <li class="sidebar_list-item">
-            <a href="" class="sidebar_list-link active">
+            <a href="http://localhost:3000/mydate" class="sidebar_list-link 
+            <%if(title == 'mydate'){%>
+                <%=active%>
+            <%}%>">
                 <i class="fi fi-rr-cloud-sun"></i>
                 Ngày hôm nay
             </a>
         </li>
         <li class="sidebar_list-item">
-            <a href="" class="sidebar_list-link"><i class="fi fi-rr-star"></i>
+            <a href="http://localhost:3000/taskimportant" class="sidebar_list-link
+            <%if(title == 'important'){%>
+                <%=active%>
+            <%}%>">
+                <i class="fi fi-rr-star"></i>
                 Quan trọng
             </a>
         </li>
         <li class="sidebar_list-item">
-            <a href="" class="sidebar_list-link">
+            <a href="" class="sidebar_list-link
+            <%if(title == 'alltask'){%>
+                <%=active%>
+            <%}%>">
                 <i class="fi fi-rr-home"></i>
                 Tất cả công việc</a>
         </li>

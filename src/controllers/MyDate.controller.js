@@ -8,7 +8,7 @@ MyDate.handleCreateTask = async (req, res) => {
     try {
         let task = req.body;
         await Task.addTask(task);
-        res.status(200).render('mydate');
+        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
     }
     catch (err) {
         res.status(500).json(err);
@@ -19,7 +19,7 @@ MyDate.handleDeleteTask = async (req, res) => {
     try {
         let id = req.params.id;
         await Task.deleteTask(id);
-        res.status(200).render('mydate');
+        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
     }
     catch (err) {
         res.status(500).json(err);
@@ -35,7 +35,7 @@ MyDate.handleUpdateTask = async (req, res) => {
         if (important) await Task.updateTaskImportant(id, important);
         else if (name) await Task.updateTaskName(id, name);
         else await Task.updateTaskStatus(id, status);
-        res.status(200).render('mydate');
+        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
     }
     catch (err) {
         res.status(500).json(err);

@@ -2,7 +2,7 @@ const menu = document.querySelector('#menu');
 const sidebar = document.querySelector('#sidebar');
 const content = document.querySelector('.content');
 const menu_hidden = document.querySelector('#menu_hidden');
-const url = 'http://localhost:3000/mydate/mydateapi';
+const url = window.location.href + '/tasksapi';
 
 const listTasksComplated = document.querySelector(
     '.content_mytask-compate-list',

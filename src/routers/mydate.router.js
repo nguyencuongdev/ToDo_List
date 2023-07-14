@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const MyDate = require('../controllers/MyDate.controller');
+const MyDateController = require('../controllers/MyDate.controller');
 
 router.get('/', (req, res) => {
-    res.render('mydate');
+    res.render('mydate', { title: 'mydate', active: 'active' });
 })
-router.get('/mydateapi', MyDate.handleReadTask);
+router.get('/tasksapi', MyDateController.handleReadTask);
 
-router.post('/mydateapi', MyDate.handleCreateTask);
+router.post('/tasksapi', MyDateController.handleCreateTask);
 
-router.delete('/mydateapi/:id', MyDate.handleDeleteTask);
+router.delete('/tasksapi/:id', MyDateController.handleDeleteTask);
 
-router.patch('/mydateapi/:id', MyDate.handleUpdateTask);
+router.patch('/tasksapi/:id', MyDateController.handleUpdateTask);
 
-router.get('/mydateapi/:id', MyDate.readTasksDetail);
+router.get('/tasksapi/:id', MyDateController.readTasksDetail);
 module.exports = router;
