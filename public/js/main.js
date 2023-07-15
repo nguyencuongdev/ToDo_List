@@ -344,10 +344,9 @@ function createTaskNext(list, idTaskDetail, name, status = false, idOfTask) {
                                     </button>`;
     list.appendChild(taskNext);
 }
-let ListDetail = [];
-const ListDetailTemp = [];
 async function showDetailTask(event) {
-    ListDetail = [];
+    let ListTaskDetail = [];
+    let ListTaskNextAdd = [];
     //reponsive UI
     if (
         sidebar.classList.contains('hidden') &&
@@ -382,16 +381,16 @@ async function showDetailTask(event) {
         taskElement.getAttribute('data-index'),
     );
 
-    //all API để lấy dữ liệu của task đó.
+    //call API để lấy dữ liệu của task đó.
     let description = '';
     await fetch(url + '/' + id)
         .then(res => res.json())
         .then(task => {
-            ListDetail = task.ListDetail;
+            ListTaskDetail = task.ListDetail;
             description = task.description;
         })
         .catch(err => console.log(err));
-    let idTaskDetail = ListDetail[ListDetail?.length - 1]?.idTaskDetail ?? 0;
+    let idTaskDetail = ListTaskDetail[ListTaskDetail?.length - 1]?.idTaskDetail ?? 0;
 
     //lấy ra form add task next và list task next
     const formAddTasksNext = formDetailTask.querySelector('#form_mytask-next');
@@ -401,9 +400,8 @@ async function showDetailTask(event) {
 
     listTaskNext.innerHTML = ''; // clear list task next trước khi add tasks next vào
 
-    //Show list task next to UI
-    ListDetail.forEach(task => {
-        ListDetailTemp.push(task);
+    //Show list task detail to UI
+    ListTaskDetail.forEach(task => {
         createTaskNext(
             listTaskNext,
             task.idTaskDetail,
@@ -432,28 +430,30 @@ async function showDetailTask(event) {
         event.stopPropagation();
         if (inputTaskNext.value) {
             idTaskDetail++;
+            // add to UI
             createTaskNext(
                 listTaskNext,
                 idTaskDetail,
                 inputTaskNext.value,
                 false,
                 id,
-            ); // add to UI
+            );
             const taskDetail = {
                 idTaskDetail,
                 name: inputTaskNext.value,
                 status: false,
                 id,
             };
-            ListDetail.push(taskDetail); // add to list Task next temp
+            ListTaskNextAdd.push(taskDetail); // add to list Task next want add;
             inputTaskNext.value = '';
         }
     }
 
     function handleResertDetailTask(event) {
         event.preventDefault();
+        //add task next to list task detail
         listTaskNext.innerHTML = '';
-        ListDetailTemp.forEach((task, index) => {
+        ListTaskDetail.forEach((task, index) => {
             createTaskNext(
                 listTaskNext,
                 task.idTaskDetail,
@@ -462,7 +462,7 @@ async function showDetailTask(event) {
                 task.id,
             );
         });
-        ListDetail = ListDetailTemp;
+        ListTaskNextAdd = [];
         inputDescription.value = description;
         inputTaskNext.value = '';
     }
@@ -472,23 +472,21 @@ async function showDetailTask(event) {
         try {
             event.preventDefault();
             await fetch(url + '/' + id, {
-                method: 'PATCH',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     description: inputDescription.value,
-                    ListDetail,
+                    ListTaskNextAdd,
                 }),
             });
-            //giải phóng bộ nhớ
-            ListDetail = [];
-            ListDetailTemp = [];
         } catch (err) {
             console.log('Lỗi add tasks next');
         }
     });
+
 }
 //function handle close form detail task
-function hiddenDetailTask() {
+async function hiddenDetailTask() {
     if (
         !sidebar.classList.contains('hidden') &&
         content.classList.contains('content-5')
@@ -557,6 +555,7 @@ function editTask(event) {
     //listen event click button close form update
     function hiddenFormUpdate(e) {
         e.preventDefault();
+        location.href = location.href;//refresh page
         formUpdate.classList.remove('show');
         btnCloseFormUpdate.removeEventListener('click', hiddenFormUpdate);
     }

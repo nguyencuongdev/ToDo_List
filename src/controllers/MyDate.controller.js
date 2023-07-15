@@ -44,4 +44,21 @@ MyDate.handleUpdateTask = async (req, res) => {
 
 MyDate.readTasksDetail = TaskDetail.getTaskDetail;
 
+MyDate.handleCreateTaskNext = async (req, res) => {
+    try {
+        let id = req.params.id ?? false;
+        if (id) {
+            let taskDetail = req.body;
+            let description = taskDetail.description ?? '';
+            let ListTasksNextAdded = taskDetail.ListTaskNextAdd ?? [];
+            await TaskDetail.addTaskDetail(ListTasksNextAdded);
+            await Task.updateTaskDescription(id, description);
+            res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+        }
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
+}
+
 module.exports = MyDate;

@@ -8,6 +8,7 @@ router.get('/', (req, res) => {
 router.get('/tasksapi', MyDateController.handleReadTask);
 
 router.post('/tasksapi', MyDateController.handleCreateTask);
+router.post('/tasksapi/:id', MyDateController.handleCreateTaskNext);
 
 router.delete('/tasksapi/:id', MyDateController.handleDeleteTask);
 
