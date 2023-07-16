@@ -55,11 +55,22 @@ MyDate.handleCreateTaskDetail = async (req, res) => {
         let id = req.params.id ?? false;
         if (id) {
             let taskDetail = req.body;
+            console.log(taskDetail);
             await TaskDetail.addTaskDetail(taskDetail);
             res.status(200).render('mydate', { title: 'mydate', active: 'active' });
         }
     }
     catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+MyDate.handleDeleteTaskDetail = async (req, res) => {
+    try {
+        let id = req.params.id;
+        await TaskDetail.deleteTaskDetail(id);
+        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+    } catch (err) {
         res.status(500).json(err);
     }
 }

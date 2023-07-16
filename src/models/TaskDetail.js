@@ -47,7 +47,7 @@ TaskDetail.getTaskDetail = async (req, res) => {
 TaskDetail.addTaskDetail = async (TaskDetail) => {
     let insert_sql = `insert into todolist.taskdetail (idTaskDetail,name, status, id)
                          values (?, ?, ?, ?)`;
-    const data = await new Promise.resolve(
+    const data = await Promise.resolve(
         [
             TaskDetail.idTaskDetail,
             TaskDetail.name,
@@ -56,7 +56,7 @@ TaskDetail.addTaskDetail = async (TaskDetail) => {
         ]
     )
     connection.query(insert_sql, data, (err) => {
-        err ? console.log(err) : console.log('thêm thành công! task detail');
+        err ? console.log('lỗi tạo task detail') : console.log('thêm thành công! task detail');
     })
 }
 
@@ -64,6 +64,13 @@ TaskDetail.deleteAllTaskDetail = async (id) => {
     let delete_sql = `delete from todolist.taskdetail where taskdetail.id = ${id}`;
     connection.query(delete_sql, (err) => {
         err ? console.log('Xóa thất bại! all tasks detail') : console.log('xóa thành công! all tasks detail')
+    })
+}
+
+TaskDetail.deleteTaskDetail = async (idTaskDetail) => {
+    let delete_sql = `delete from todolist.taskdetail where taskdetail.idTaskDetail = ${idTaskDetail}`;
+    connection.query(delete_sql, (err) => {
+        err ? console.log('Xóa thất bại! task detail') : console.log('xóa thành công! task detail')
     })
 }
 module.exports = TaskDetail;

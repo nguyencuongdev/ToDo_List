@@ -112,7 +112,7 @@ async function deleteTaskDetail(event) {
 
     const index = elementTaskDetail.getAttribute('data-index');
     //call api to server delete task detail
-    await fetch(url + '/' + id, {
+    await fetch(url + '/detail/' + id, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ index, id })
@@ -157,7 +157,7 @@ function handleAllEvent() {
                 body: JSON.stringify({ name }),
             });
             console.log('Cập nhật tên thành công!');
-        });
+        })
 
         //Listen event change description task
         elementShowDescription.addEventListener('blur', async () => {
@@ -168,7 +168,7 @@ function handleAllEvent() {
                 body: JSON.stringify({ description }),
             });
             console.log('Cập nhật mô tả thành công!');
-        });
+        })
 
         //listen event add task detail
         elementAddTaskDetail.addEventListener('submit', async event => {
@@ -186,12 +186,11 @@ function handleAllEvent() {
             await fetch(url + '/' + id, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(taskDetail)
-            })
-            console.log(taskDetail);
+                body: JSON.stringify(taskDetail),
+            });
             createTaskDetail(elementShowlistTaskDetail, taskDetail);
             name.value = '';
-        });
+        })
 
         //listen event load page;
         window.addEventListener('load', async () => {
@@ -207,7 +206,7 @@ function handleAllEvent() {
                 task.ListDetail[task.ListDetail.length - 1]?.idTaskDetail ?? 0;
             countNumberTaskDetail = task.ListDetail.length;
             elementShowNumberTaskDetail.innerHTML = countNumberTaskDetail;
-        });
+        })
     } catch (err) {
         console.log(err);
     }

@@ -25,4 +25,6 @@ router.patch('/tasksapi/:id', MyDateController.handleUpdateTask);
 router.get('/tasksapi/:id', MyDateController.readTasksDetail);
 //router api để tạo task detail
 router.post('/tasksapi/:id', MyDateController.handleCreateTaskDetail);
+//router api để xóa 1 task detail
+router.delete('/tasksapi/detail/:id/', MyDateController.handleDeleteTaskDetail);
 module.exports = router;
