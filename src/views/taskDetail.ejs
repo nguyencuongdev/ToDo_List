@@ -1,0 +1,52 @@
+<div class="content">
+    <div class="content_title">
+        <div class="content_title-date">
+            <i class="fi fi-rr-apps menu hidden" id="menu_hidden"></i>
+            <div class="content_title-date-item">
+                <div>
+                    <i class="fi fi-rr-star"></i>
+                    <nav class="content-navigation">
+                        <a href="/taskimportant" class="content-navigation-link">
+                            Tasks important
+                        </a>
+                        <i class="fi fi-rr-angle-small-right content-navigation-icon"></i>
+                        <a href="#" class="content-navigation-link">
+                            Task detail
+                        </a>
+                    </nav>
+                </div>
+                <div class="content_title-date-detail">
+                    <p style="margin: 6px 0 0 2px" id="showDateNow">
+                        Thứ 2, ngày 2 tháng 6, năm 2023
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content_name">
+        <input type="text" name="name" placeholder="Tên công việc" class="content-name-text" />
+    </div>
+    <div class="content_decscription">
+        <textarea name="" id="" cols="30" rows="10" class="content_description-text"
+            placeholder="Mô tả công việc"></textarea>
+    </div>
+    <div class="content_form">
+        <form class="content_form-add-taskDetail" action="" method="post" id="form-add-task">
+            <div class="content_form-add-taskDetail-group">
+                <i class="fi fi-rr-circle content_form-add-taskDetail-icon"></i>
+                <input autocomplete="off" class="content_form-add-taskDetail-input" name="name"
+                    placeholder="Thêm công việc chi tiết" type="text" />
+            </div>
+            <input type="submit" value="Thêm" class="btn btn-submit" />
+        </form>
+    </div>
+    <div class="content_detail">
+        <div class="content_detail-title">
+            <img src="/static/imgs/angle-small-right.png" alt="" />
+            <h4>Danh sách công việc chi tiết</h4>
+            <span id="countDetail"></span>
+        </div>
+        <div class="content_detail-list"></div>
+    </div>
+</div>
+<script src="/static/js/detail.js"></script>

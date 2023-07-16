@@ -29,12 +29,18 @@ MyDate.handleDeleteTask = async (req, res) => {
 MyDate.handleUpdateTask = async (req, res) => {
     try {
         let id = req.params.id;
-        let important = req.body.important ?? false;
-        let status = req.body.status ?? false;
-        let name = req.body.name ?? false;
-        if (important) await Task.updateTaskImportant(id, important);
-        else if (name) await Task.updateTaskName(id, name);
-        else await Task.updateTaskStatus(id, status);
+        if ("important" in req.body) {
+            let important = req.body.important;
+            await Task.updateTaskImportant(id, important);
+        }
+        else if ("name" in req.body) {
+            let name = req.body.name;
+            await Task.updateTaskName(id, name);
+        }
+        else if ("status" in req.body) {
+            let status = req.body.status;
+            await Task.updateTaskStatus(id, status);
+        }
         res.status(200).render('mydate', { title: 'mydate', active: 'active' });
     }
     catch (err) {
@@ -59,6 +65,10 @@ MyDate.handleCreateTaskNext = async (req, res) => {
     catch (err) {
         res.status(500).json(err);
     }
+}
+
+MyDate.handleShowTaskDetail = async (req, res) => {
+    res.render('taskDetail', { title: 'mydate', active: 'active' });
 }
 
 module.exports = MyDate;

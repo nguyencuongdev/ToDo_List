@@ -10,6 +10,7 @@ Task.getTasks = async (req, res) => {
 }
 Task.addTask = async (task) => {
     let insert_sql = `insert into todolist.tasks(tasks.id,tasks.name,tasks.description,tasks.important,tasks.status) values(${task.id},'${task.name}','${task.description}',${task.important},${task.status})`;
+    console.log(task);
     connection.query(insert_sql, (err) => {
         err ? console.log('Thêm thất bại') : console.log('thêm thành công!');
     })
