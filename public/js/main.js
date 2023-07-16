@@ -364,7 +364,6 @@ function editTask(event) {
     const elementsUrl = url.split('/');
     let urlNew = elementsUrl.slice(0, elementsUrl.length - 1).join('/');
     location.href = urlNew + '/detail/' + id;
-    console.log(urlNew + '/detail/' + id);
 }
 
 async function deleteTask(event) {
@@ -390,9 +389,7 @@ async function deleteTask(event) {
 function showButtonTask(event) {
     event.preventDefault();
     const taskElement = event.target;
-    console.log(taskElement);
     const buttonTask = taskElement.querySelector('.content_mytask-item-button');
-    console.log(buttonTask);
     buttonTask.style.display = 'block';
     function hiddenButtonTask(event) {
         if (event.target != taskElement) {

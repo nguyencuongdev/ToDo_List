@@ -3,7 +3,6 @@ const href = window.location.href;
 const elementsUrl = href.split('/');
 const id = +elementsUrl[elementsUrl.length - 1];
 let url = elementsUrl.slice(0, elementsUrl.length - 2).join('/') + '/' + 'tasksapi';
-console.log(url);
 let idTaskDetail = 0,
     countNumberTaskDetail = 0;
 
@@ -34,7 +33,7 @@ function showDateNow() {
     elementShowDayNow.innerHTML = stringDateMonthYear;
 }
 function playTinhTinh() {
-    const audio = new Audio('/public/audios/tinhtinh.mp4');
+    const audio = new Audio('/static/audios/tinhtinh.mp4');
     let promise = audio.play();
     if (promise) {
         promise
@@ -64,12 +63,12 @@ async function updateStatusFinish(event) {
         name,
         status,
     };
-    // //call api to server update status task detail
-    // await fetch(url + '/' + id, {
-    //     method: 'PATCH',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ index, status, id })
-    // })
+    //call api to server update status task detail
+    await fetch(url + '/' + id, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ index, status, id })
+    })
     //update status task detail to UI
     if (status) playTinhTinh();
     elementTaskDetail.remove();
@@ -93,12 +92,12 @@ async function updateStatusNotFinish(event) {
         name,
         status,
     };
-    // //call api to server update status task detail
-    // await fetch(url + '/' + id, {
-    //     method: 'PATCH',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ index, status, id })
-    // })
+    //call api to server update status task detail
+    await fetch(url + '/' + id, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ index, status, id })
+    })
     //update status task detail to UI
     elementTaskDetail.remove();
     createTaskDetail(elementShowlistTaskDetail, taskDetail);
@@ -112,12 +111,12 @@ async function deleteTaskDetail(event) {
     }
 
     const index = elementTaskDetail.getAttribute('data-index');
-    // //call api to server delete task detail
-    // await fetch(url + '/' + id, {
-    //     method: 'DELETE',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ index, id })
-    // })
+    //call api to server delete task detail
+    await fetch(url + '/' + id, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ index, id })
+    })
     //delete task detail to UI
     elementTaskDetail.remove();
 }
@@ -138,7 +137,7 @@ function createTaskDetail(elementShowTaskDetail, taskDetail) {
                                                     <i class="fi fi-rr-trash"></i>
                                                 </button>
                                             </div>`;
-    if (taskDetail.status) {
+    if (+taskDetail.status) {
         taskDetailElement.addEventListener('click', updateStatusNotFinish);
         taskDetailElement.classList.add('finish');
         elementShowTaskDetail.appendChild(taskDetailElement);
@@ -184,11 +183,12 @@ function handleAllEvent() {
                 status: false,
                 idTaskDetail,
             };
-            // await fetch(url + '/' + id, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify(taskDetail)
-            // })
+            await fetch(url + '/' + id, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskDetail)
+            })
+            console.log(taskDetail);
             createTaskDetail(elementShowlistTaskDetail, taskDetail);
             name.value = '';
         });
@@ -199,7 +199,6 @@ function handleAllEvent() {
             const task = await res.json();
             elementShowDescription.value = task?.description;
             elementShowNameTask.value = task?.name;
-
             //Show list task detail to UI
             task.ListDetail.forEach(taskDetail => {
                 createTaskDetail(elementShowlistTaskDetail, taskDetail);

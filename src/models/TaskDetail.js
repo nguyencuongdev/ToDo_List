@@ -44,20 +44,20 @@ TaskDetail.getTaskDetail = async (req, res) => {
 };
 
 
-TaskDetail.addTaskDetail = async (ListTaskDetail) => {
+TaskDetail.addTaskDetail = async (TaskDetail) => {
     let insert_sql = `insert into todolist.taskdetail (idTaskDetail,name, status, id)
-                     values (?, ?, ?, ?)`;
-    for (let i = 0; i < ListTaskDetail.length; i++) {
-        const data = [
-            ListTaskDetail[i].idTaskDetail,
-            ListTaskDetail[i].name,
-            ListTaskDetail[i].status,
-            ListTaskDetail[i].id
-        ];
-        connection.query(insert_sql, data, (err) => {
-            err ? console.log(err) : console.log('thêm thành công! task detail');
-        })
-    }
+                         values (?, ?, ?, ?)`;
+    const data = await new Promise.resolve(
+        [
+            TaskDetail.idTaskDetail,
+            TaskDetail.name,
+            TaskDetail.status,
+            TaskDetail.id
+        ]
+    )
+    connection.query(insert_sql, data, (err) => {
+        err ? console.log(err) : console.log('thêm thành công! task detail');
+    })
 }
 
 TaskDetail.deleteAllTaskDetail = async (id) => {
