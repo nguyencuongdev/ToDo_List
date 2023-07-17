@@ -1,8 +1,8 @@
+const url = window.location.href + '/tasksapi';
 const menu = document.querySelector('#menu');
 const sidebar = document.querySelector('#sidebar');
 const content = document.querySelector('.content');
 const menu_hidden = document.querySelector('#menu_hidden');
-const url = window.location.href + '/tasksapi';
 
 
 const myTaskList = document.querySelector('.content_mytask-list');
@@ -22,45 +22,52 @@ const ShowNumberTaskComplate =
 const ShowNumberTaskNotComplate = buttonShowTaskNotComplate.querySelector(
     '#countTaskNotFinish',
 );
-let countTaskComplate = 0;
-let countTaskNotComplate = 0;
 
 const showDateNow = document.querySelector('#showDateNow');
 const date = new Date(); // ngày tháng năm hiện tại
+
 const buttonAddTask = document.querySelector('#add');
 const formAddTask = document.querySelector('#form-add-task');
 const audio = new Audio('/static/audios/tinhtinh.mp4');
+
+
+let countTaskComplate = 0;
+let countTaskNotComplate = 0;
 
 let day = '';
 let idTask = 0;
 let idTaskNext = 0;
 let countTaskFinish = 0;
 
-menu.onclick = () => {
-    content.classList.add('content-10');
-    sidebar.classList.add('hidden');
-    menu_hidden.classList.remove('hidden');
-};
 
-menu_hidden.onclick = () => {
-    content.classList.remove('content-10');
-    sidebar.classList.remove('hidden');
-    menu_hidden.classList.add('hidden');
-};
-
-buttonShowTaskComlated.onclick = () => {
-    ShowTaskFinished();
-};
-
-function ShowTaskFinished() {
+function ShowTasksFinished() {
     listTasksComplated.classList.toggle('hidden');
 }
-
-buttonShowTaskNotComplate.onclick = () => {
-    ShowTaskNotComplate();
-};
-function ShowTaskNotComplate() {
+function ShowTasksNotComplate() {
     myTaskList.classList.toggle('hidden');
+}
+
+function ShowDayNow() {
+    if (date.getDay() == 0) {
+        day = 'Chủ nhật';
+    } else {
+        day = 'Thứ ' + (date.getDay() + 1);
+    }
+    showDateNow.textContent = `${day}, ngày ${date.getDate()} tháng ${date.getMonth() + 1
+        }, năm ${date.getFullYear()}`;
+}
+
+function playTinhTinh() {
+    let promise = audio.play();
+    if (promise !== undefined) {
+        promise
+            .then(_ => {
+                audio.play();
+            })
+            .catch(error => {
+                console.log('Lỗi phát nhạc');
+            });
+    }
 }
 
 async function noImportant(event) {
@@ -122,29 +129,6 @@ async function important(event) {
         console.log(error);
     }
 }
-function ShowDayNow() {
-    if (date.getDay() == 0) {
-        day = 'Chủ nhật';
-    } else {
-        day = 'Thứ ' + (date.getDay() + 1);
-    }
-    showDateNow.textContent = `${day}, ngày ${date.getDate()} tháng ${date.getMonth() + 1
-        }, năm ${date.getFullYear()}`;
-}
-ShowDayNow();
-
-function playTinhTinh() {
-    let promise = audio.play();
-    if (promise !== undefined) {
-        promise
-            .then(_ => {
-                audio.play();
-            })
-            .catch(error => {
-                console.log('Lỗi phát nhạc');
-            });
-    }
-}
 
 function createTask(List, task) {
     let myTaskItem = document.createElement('div');
@@ -152,9 +136,6 @@ function createTask(List, task) {
     myTaskItem.setAttribute('important', task.important);
     myTaskItem.classList.add('content_mytask-item');
     myTaskItem.innerHTML = `  <div class="content_mytask-group">
-                                <button class="updatefinish" onclick="updatefinish(event)">
-                                    <i class="fi fi-rr-circle" id="finish-icon"></i>
-                                </button>
                                 <h4 class="content_mytask-title" onclick=" event.stopPropagation();">${task.name}</h4>
                             </div>
                             <div class="content_mytask-date">
@@ -175,7 +156,7 @@ function createTask(List, task) {
                                 </button>
                             </div>
                             <div class="content_mytask-item-button">
-                                <button class="content_mytask-button-item edit" onclick="editTask(event)">
+                                <button class="content_mytask-button-item edit" onclick="showPageDetailTask(event)">
                                     Xem chi tiết
                                     <i class="fi fi-rr-edit"></i>
                                 </button>
@@ -185,184 +166,107 @@ function createTask(List, task) {
                                 </button>
                             </div>`;
     myTaskItem.addEventListener('click', showButtonTask);
+
+    //Check task important ? if important = true => show button off important
+    //and else show button on important
     if (task.important) {
         myTaskItem.querySelector('.important').classList.add('hidden');
         myTaskItem.querySelector('.noimportant').classList.remove('hidden');
     }
-    List.prepend(myTaskItem);
-}
 
-function createTaskFinish(List, task) {
-    let myTaskItem = document.createElement('div');
-    myTaskItem.setAttribute('data-index', task.id);
-    myTaskItem.setAttribute('important', task.important);
-    myTaskItem.classList.add('content_mytask-item');
-    myTaskItem.innerHTML = `  <div class="content_mytask-group">
-                                <button class="not-update-finish" onclick="updateTaskNotFinish(event)">
-                                    <i class="fi fi-rr-check-circle"></i>
-                                </button>
-                                <h4 class="content_mytask-title" onclick=" event.stopPropagation();">${task.name}</h4>
-                            </div>
-                            <div class="content_mytask-date">
-                                <span class="content-mytask-date-start content-mytask-date-item">
-                                    ${task.startDate}
-                                </span>
-                                <span class="content-mytask-divider">/</span>
-                                <span class="content-mytask-date-end content-mytask-date-item">
-                                    ${task.endDate}
-                                </span>
-                            </div>
-                            <div title="Đánh dấu công việc quan trọng">
-                               <button class="important" onclick="important(event)">
-                                   <i class="fi fi-rr-star"></i>
-                                </button>
-                                <button class="noimportant hidden" onclick="noImportant(event)">
-                                    <img src="/static/imgs/star.png">
-                                </button>
-                            </div>
-                             <div class="content_mytask-item-button">
-                                <button class="content_mytask-button-item edit" onclick="editTask(event)">
-                                    Xem chi tiết
-                                    <i class="fi fi-rr-edit"></i>
-                                </button>
-                                <button class="content_mytask-button-item delete" onclick="deleteTask(event)">
-                                    Xóa task
-                                    <i class="fi fi-rr-trash"></i>
-                                </button>
-                                </div>
-                            </div>`;
-    myTaskItem.addEventListener('click', showButtonTask);
-    //Check task important ?
-    if (task.important) {
-        myTaskItem.querySelector('.important').classList.add('hidden');
-        myTaskItem.querySelector('.noimportant').classList.remove('hidden');
+    //Check task status ? if status = finish => add button update not finish 
+    // and else add button update finish
+    const elementGroupButtonAndTitle = myTaskItem.querySelector('.content_mytask-group');
+    if (task.status) {
+        elementGroupButtonAndTitle.innerHTML =
+            `<button class="not-update-finish" onclick="updateStatusTaskOnUIAndServer(event,false)">
+             <i class="fi fi-rr-check-circle"></i>
+        </button>` + elementGroupButtonAndTitle.innerHTML;
+    } else {
+        elementGroupButtonAndTitle.innerHTML =
+            `<button class="updatefinish" onclick="updateStatusTaskOnUIAndServer(event,true)">
+            <i class="fi fi-rr-circle" id="finish-icon" ></i>
+        </button >` + elementGroupButtonAndTitle.innerHTML;
     }
     List.prepend(myTaskItem);
 }
 
-function addTaskFinished(element) {
-    let id = element.getAttribute('data-index');
-    const name = element.querySelector('.content_mytask-title').textContent;
-    const important = element.getAttribute('important');
-    const startDate =
-        element.querySelector('.content-mytask-date-start')?.value ??
-        Date.now();
-    const endDate =
-        element.querySelector('.content-mytask-date-end')?.value ?? Date.now();
-    createTaskFinish(listTasksComplated, {
-        id,
-        name,
-        important,
-        startDate,
-        endDate,
-    });
-    listTasksComplated.classList.remove('hidden');
-    playTinhTinh();
-    countTaskNotComplate--;
-    countTaskFinish++;
+function addTaskToUI(task) {
+    const id = task.id,
+        name = task.name,
+        important = task.important,
+        startDate = task.startDate,
+        endDate = task.endDate,
+        status = task.status;
+
+    //if task status = true 
+    //=> add task to list task finish else add task to list task not finish
+    if (status) {
+        createTask(listTasksComplated, { id, name, important, status, startDate, endDate });
+        countTaskNotComplate--;
+        countTaskFinish++;
+    }
+    else {
+        createTask(myTaskList, { id, name, important, status, startDate, endDate });
+        countTaskNotComplate++;
+        countTaskFinish--;
+    }
     ShowNumberTaskComplate.textContent = countTaskFinish;
     ShowNumberTaskNotComplate.textContent = countTaskNotComplate;
 }
 
-function addTaskNotFinish(element) {
-    let id = element.getAttribute('data-index');
-    const name = element.querySelector('.content_mytask-title').textContent;
-    const important = element.getAttribute('important');
-    const startDate =
-        element.querySelector('.content-mytask-date-start')?.value ??
-        Date.now();
-    const endDate =
-        element.querySelector('.content-mytask-date-end')?.value ?? Date.now();
-    createTask(myTaskList, { id, name, important, startDate, endDate });
-    countTaskNotComplate++;
-    countTaskFinish--;
-    ShowNumberTaskComplate.textContent = countTaskFinish;
-    ShowNumberTaskNotComplate.textContent = countTaskNotComplate;
-}
-
-async function updatefinish(event) {
+async function addTaskToServer(task) {
     try {
-        event.preventDefault();
-        event.stopPropagation();
-        let elementTask = event.target.parentNode;
-        while (!elementTask.classList.contains('content_mytask-item')) {
-            elementTask = elementTask.parentNode;
-        }
-        addTaskFinished(elementTask);
-        let id = elementTask.getAttribute('data-index');
-        //call API to server update status task
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(task),
+        });
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+async function updateStatusTaskOnUIAndServer(event, status = false) {
+    event.preventDefault();
+    event.stopPropagation();
+    let elementTask = event.target.parentNode;
+    while (!elementTask.classList.contains('content_mytask-item')) {
+        elementTask = elementTask.parentNode;
+    }
+    const id = elementTask.getAttribute('data-index'),
+        name = elementTask.querySelector('.content_mytask-title').textContent,
+        important = elementTask.getAttribute('important'),
+        startDate = elementTask.querySelector('.content-mytask-date-start').value,
+        endDate = elementTask.querySelector('.content-mytask-date-end').value;
+
+    const task = {
+        id, name, important, status, startDate, endDate
+    }
+    //add task to list task respective and remove task in list task finish on UI
+    addTaskToUI(task);
+    elementTask.remove();
+
+    //update status task to server
+    updateStatusTaskToServer(id, status);
+}
+
+async function updateStatusTaskToServer(id, status) {
+    try {
         await fetch(url + '/' + id, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ status: true }),
+            body: JSON.stringify({ status }),
         });
-        elementTask.remove();
     } catch (error) {
-        console.log('Lỗi update task');
+        console.log('Lỗi update status task');
     }
 }
 
-async function updateTaskNotFinish(event) {
-    try {
-        event.preventDefault();
-        event.stopPropagation();
-        let elementTask = event.target.parentNode;
-        while (!elementTask.classList.contains('content_mytask-item')) {
-            elementTask = elementTask.parentNode;
-        }
-        //add task to list task not finish and remove task in list task finish on UI
-        addTaskNotFinish(elementTask);
-        elementTask.remove();
-        let id = elementTask.getAttribute('data-index');
-        //Call API to server update status task
-        await fetch(url + '/' + id, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status: false }),
-        });
-    } catch (error) {
-        console.log('Lỗi update task');
-    }
-}
-
-//listen event submit form add task
-formAddTask.onsubmit = async function (e) {
-    e.preventDefault();
-    try {
-        const inputTaskElement = document.querySelector('#input_task');
-        const inputStartDate = document.querySelector('#date-start');
-        const inputEndDate = document.querySelector('#date-end');
-        if (inputTaskElement.value) {
-            idTask++;
-            const task = {
-                id: idTask,
-                name: inputTaskElement.value,
-                description: '',
-                important: false,
-                status: false,
-                startDate: inputStartDate.value,
-                endDate: inputEndDate.value,
-            };
-            createTask(myTaskList, task); //create task on UI
-            await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(task),
-            });
-            inputTaskElement.value = '';
-            countTaskNotComplate++;
-            ShowNumberTaskNotComplate.textContent = countTaskNotComplate;
-        }
-    } catch (err) {
-        alert('Lỗi thêm task');
-    }
-};
-
-function editTask(event) {
+function showPageDetailTask(event) {
     event.stopPropagation(); // ngăn chặn sự kiện nổi bọt
     let elementTask = event.target;
     while (!elementTask.classList.contains('content_mytask-item')) {
@@ -377,22 +281,24 @@ function editTask(event) {
 }
 
 async function deleteTask(event) {
+    event.stopPropagation(); // ngăn chặn sự kiện nổi bọt
+    // lấy ra task cần xóa
+    let taskElement = event.target;
+    while (!taskElement.classList.contains('content_mytask-item')) {
+        taskElement = taskElement.parentNode;
+    }
+    const id = taskElement.getAttribute('data-index');
+    await deleteTaskOnServer(id);//delte task in server
+    taskElement.remove(); // delete task in UI
+}
+
+async function deleteTaskOnServer(id) {
     try {
-        event.stopPropagation(); // ngăn chặn sự kiện nổi bọt
-        // lấy ra task cần xóa
-        let taskElement = event.target;
-        while (!taskElement.classList.contains('content_mytask-item')) {
-            taskElement = taskElement.parentNode;
-        }
-        const id = taskElement.getAttribute('data-index');
-        //call api to server to delete task
         await fetch(url + '/' + id, {
             method: 'DELETE',
         });
-        alert('Xóa thành công!');
-        taskElement.remove(); // delete task in UI
     } catch (err) {
-        console.log(err);
+        console.log('Xóa thất bại');
     }
 }
 
@@ -408,26 +314,75 @@ function showButtonTask(event) {
     }
     window.addEventListener('click', hiddenButtonTask);
 }
-window.addEventListener('load', async function () {
-    try {
-        const res = await fetch(url);
-        const tasks = await res.json();
-        if (tasks.length > 0) {
-            idTask = tasks[tasks.length - 1].id;
-        }
-        //Lấy từng task trong db và hiển thị lên UI
-        tasks.forEach(task => {
-            if (task.status) {
-                createTaskFinish(listTasksComplated, task);
-                countTaskFinish++;
-                ShowNumberTaskComplate.textContent = countTaskFinish;
-            } else {
-                createTask(myTaskList, task);
-                countTaskNotComplate++;
-                ShowNumberTaskNotComplate.textContent = countTaskNotComplate;
+
+function handleAllEvents() {
+
+    //listen event submit form add task
+    formAddTask.onsubmit = async function (e) {
+        e.preventDefault();
+        try {
+            const inputTaskElement = document.querySelector('#input_task'),
+                inputStartDate = document.querySelector('#date-start'),
+                inputEndDate = document.querySelector('#date-end');
+
+            if (inputTaskElement.value) {
+                idTask++;
+                const task = {
+                    id: idTask,
+                    name: inputTaskElement.value,
+                    description: '',
+                    important: false,
+                    status: false,
+                    startDate: inputStartDate.value,
+                    endDate: inputEndDate.value,
+                };
+                await addTaskToServer(task); //add task to server
+                addTaskToUI(task); //add task to UI
+                inputTaskElement.value = '';
             }
-        });
-    } catch (err) {
-        console.log(err);
-    }
-});
+        } catch (err) {
+            alert('Lỗi thêm task');
+        }
+    };
+
+    //listen event load page
+    window.addEventListener('load', async function () {
+        try {
+            const res = await fetch(url);
+            const tasks = await res.json();
+            if (tasks.length > 0) {
+                idTask = tasks[tasks.length - 1].id;
+            }
+            //Lấy từng task trong db và hiển thị lên UI
+            tasks.forEach(task => {
+                addTaskToUI(task);
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    });
+
+    //listen event click button show task not complate
+    buttonShowTaskNotComplate.onclick = ShowTasksNotComplate;
+
+    //listen event click button show task complate
+    buttonShowTaskComlated.onclick = ShowTasksFinished;
+
+    //listen event hidden, show menu bar
+    menu.onclick = () => {
+        content.classList.add('content-10');
+        sidebar.classList.add('hidden');
+        menu_hidden.classList.remove('hidden');
+    };
+    menu_hidden.onclick = () => {
+        content.classList.remove('content-10');
+        sidebar.classList.remove('hidden');
+        menu_hidden.classList.add('hidden');
+    };
+}
+
+function start() {
+    ShowDayNow();
+    handleAllEvents();
+}
+start();

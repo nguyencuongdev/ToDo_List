@@ -487,6 +487,7 @@ ol {
     display: flex;
     align-items: center;
     border-bottom: 1px solid #ccc;
+    cursor: pointer;
 }
 
 .content_mytask-notcomplate-title>span,
