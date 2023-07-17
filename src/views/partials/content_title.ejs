@@ -1,0 +1,24 @@
+<div class="content_title">
+    <div class="content_title-date">
+        <i class="fi fi-rr-apps menu hidden" id="menu_hidden"></i>
+        <div class="content_title-date-item">
+            <div>
+                <i class="fi fi-rr-cloud-sun"></i>
+                <% if(title == 'mydate') { %>
+                    <h4> <%='Today'%> </h4>
+                <%} %>
+                <% if(title == 'important') { %>
+                    <h4> <%='Tasks Imporant'%> </h4>
+                <%}%>
+                <% if(title == 'alltask') { %>
+                     <h4> <%='All Tasks'%> </h4>
+                <%} %>
+            </div>
+            <div class="content_title-date-detail">
+                <p style="margin: 6px 0 0 2px" id="showDateNow">
+                    Thứ 2, ngày 2 tháng 6, năm 2023
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

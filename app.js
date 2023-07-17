@@ -1,6 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const ejs = require('ejs');
 const dotenv = require('dotenv');
 const path = require('path');
 const cors = require('cors');
@@ -8,11 +7,10 @@ const express_ejs_layouts = require('express-ejs-layouts');
 dotenv.config();
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// use morgan
 app.use(morgan('dev'));
 
 //set views engine
