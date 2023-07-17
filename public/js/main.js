@@ -31,13 +31,12 @@ const formAddTask = document.querySelector('#form-add-task');
 const audio = new Audio('/static/audios/tinhtinh.mp4');
 
 
-let countTaskComplate = 0;
-let countTaskNotComplate = 0;
 
 let day = '';
 let idTask = 0;
-let idTaskNext = 0;
-let countTaskFinish = 0;
+let countTaskComplate = 0;
+let countTaskNotComplate = 0;
+let countTaskOverTime = 0;
 
 
 function ShowTasksFinished() {
@@ -70,63 +69,45 @@ function playTinhTinh() {
     }
 }
 
-async function noImportant(event) {
-    try {
-        event.stopPropagation();
-        let buttonNoImportant = event.target;
-        buttonNoImportant = buttonNoImportant.parentNode;
-        console.log(buttonNoImportant);
-        const buttonImportant =
-            buttonNoImportant.parentNode.querySelector('.important');
-        if (buttonImportant.classList.contains('hidden')) {
-            buttonImportant.classList.remove('hidden');
-            buttonNoImportant.classList.add('hidden');
+async function updateStatusTaskImportantOnUIAndServer(event, important = false) {
+    event.stopPropagation();
+    let buttonUpdate_one = event.target;
+    buttonUpdate_one = buttonUpdate_one.parentNode;
 
-            //Lấy ra task và id của task cần update
-            let taskElement = buttonNoImportant.parentNode;
-            console.log(taskElement);
-            while (!taskElement.classList.contains('content_mytask-item')) {
-                taskElement = taskElement.parentNode;
-            }
-            const id = taskElement.getAttribute('data-index');
-            await fetch(url + '/' + id, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ important: false }),
-            });
-        }
-    } catch (error) {
-        console.log(error);
+    //Lấy ra task và id của task cần update
+    let taskElement = buttonUpdate_one.parentNode;
+    while (!taskElement.classList.contains('content_mytask-item')) {
+        taskElement = taskElement.parentNode;
     }
-}
-async function important(event) {
-    try {
-        event.stopPropagation();
-        let buttonImportant = event.target;
-        buttonImportant = buttonImportant.parentNode;
-        const buttonNoImportant =
-            buttonImportant.parentNode.querySelector('.noimportant');
-        if (buttonNoImportant.classList.contains('hidden')) {
-            buttonNoImportant.classList.remove('hidden');
-            buttonImportant.classList.add('hidden');
+    const id = taskElement.getAttribute('data-index');
 
-            let taskElement = buttonImportant.parentNode;
-            while (!taskElement.classList.contains('content_mytask-item')) {
-                taskElement = taskElement.parentNode;
-            }
-            const id = taskElement.getAttribute('data-index');
-            await fetch(url + '/' + id, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ important: true }),
-            });
-        }
-    } catch (error) {
-        console.log(error);
+    //xử lý trên UI
+    if (important) {
+        const buttonUpdate_two = taskElement.querySelector('.noimportant');
+        buttonUpdate_one.classList.add('hidden');
+        buttonUpdate_two.classList.remove('hidden');
+    }
+    else {
+        const buttonUpdate_two = taskElement.querySelector('.important');
+        buttonUpdate_one.classList.add('hidden');
+        buttonUpdate_two.classList.remove('hidden');
+    }
+
+    await updateStatusTaskImportantOnServer(id, important); //update status task to server
+}
+
+async function updateStatusTaskImportantOnServer(id, important) {
+    try {
+        await fetch(url + '/' + id, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ important }),
+        });
+    }
+    catch (err) {
+        console.log(err);
     }
 }
 
@@ -148,10 +129,10 @@ function createTask(List, task) {
                                 </span>
                             </div>
                             <div title="Đánh dấu công việc quan trọng">
-                                <button class="important" onclick="important(event)">
+                                <button class="important" onclick=" updateStatusTaskImportantOnUIAndServer(event,true)">
                                     <i class="fi fi-rr-star"></i>
                                 </button>
-                                <button class="noimportant hidden" onclick="noImportant(event)">
+                                <button class="noimportant hidden" onclick=" updateStatusTaskImportantOnUIAndServer(event,false)">
                                     <img src="/static/imgs/star.png">
                                 </button>
                             </div>
@@ -201,18 +182,10 @@ function addTaskToUI(task) {
 
     //if task status = true 
     //=> add task to list task finish else add task to list task not finish
-    if (status) {
-        createTask(listTasksComplated, { id, name, important, status, startDate, endDate });
-        countTaskNotComplate--;
-        countTaskFinish++;
-    }
-    else {
+    (status) ?
+        createTask(listTasksComplated, { id, name, important, status, startDate, endDate })
+        :
         createTask(myTaskList, { id, name, important, status, startDate, endDate });
-        countTaskNotComplate++;
-        countTaskFinish--;
-    }
-    ShowNumberTaskComplate.textContent = countTaskFinish;
-    ShowNumberTaskNotComplate.textContent = countTaskNotComplate;
 }
 
 async function addTaskToServer(task) {
@@ -250,6 +223,9 @@ async function updateStatusTaskOnUIAndServer(event, status = false) {
 
     //update status task to server
     updateStatusTaskToServer(id, status);
+
+    //update number task finish and not finish on UI
+    handleShowNumberTaskOnUI(status);
 }
 
 async function updateStatusTaskToServer(id, status) {
@@ -289,6 +265,7 @@ async function deleteTask(event) {
     }
     const id = taskElement.getAttribute('data-index');
     await deleteTaskOnServer(id);//delte task in server
+    refreshNumberTaskOnLists(taskElement); //refresh number task on lists
     taskElement.remove(); // delete task in UI
 }
 
@@ -315,6 +292,42 @@ function showButtonTask(event) {
     window.addEventListener('click', hiddenButtonTask);
 }
 
+function handleShowNumberTaskOnUI(status) {
+    if (status) {
+        countTaskNotComplate--;
+        ShowNumberTaskNotComplate.innerHTML = countTaskNotComplate;
+        countTaskComplate++;
+        ShowNumberTaskComplate.innerHTML = countTaskComplate;
+    }
+    else {
+        countTaskNotComplate++;
+        ShowNumberTaskNotComplate.innerHTML = countTaskNotComplate;
+        countTaskComplate--;
+        ShowNumberTaskComplate.innerHTML = countTaskComplate;
+    }
+}
+
+function refreshNumberTaskOnLists(taskElement) {
+    let listTaskrespective = taskElement.parentElement;
+    if (listTaskrespective == myTaskList) {
+        countTaskNotComplate--;
+        ShowNumberTaskNotComplate.innerHTML = countTaskNotComplate;
+    }
+    else {
+        countTaskComplate--;
+        ShowNumberTaskComplate.innerHTML = countTaskComplate;
+    }
+}
+
+function countShowTaskNotComplateOnUI() {
+    countTaskNotComplate++;
+    ShowNumberTaskNotComplate.innerHTML = countTaskNotComplate;
+}
+function countShowTaskComplateOnUI() {
+    countTaskComplate++;
+    ShowNumberTaskComplate.innerHTML = countTaskComplate;
+}
+
 function handleAllEvents() {
 
     //listen event submit form add task
@@ -338,12 +351,14 @@ function handleAllEvents() {
                 };
                 await addTaskToServer(task); //add task to server
                 addTaskToUI(task); //add task to UI
+
+                countShowTaskNotComplateOnUI();
                 inputTaskElement.value = '';
             }
         } catch (err) {
             alert('Lỗi thêm task');
         }
-    };
+    }
 
     //listen event load page
     window.addEventListener('load', async function () {
@@ -356,11 +371,12 @@ function handleAllEvents() {
             //Lấy từng task trong db và hiển thị lên UI
             tasks.forEach(task => {
                 addTaskToUI(task);
+                task.status ? countShowTaskComplateOnUI() : countShowTaskNotComplateOnUI();
             })
         } catch (err) {
             console.log(err);
         }
-    });
+    })
 
     //listen event click button show task not complate
     buttonShowTaskNotComplate.onclick = ShowTasksNotComplate;
@@ -373,12 +389,12 @@ function handleAllEvents() {
         content.classList.add('content-10');
         sidebar.classList.add('hidden');
         menu_hidden.classList.remove('hidden');
-    };
+    }
     menu_hidden.onclick = () => {
         content.classList.remove('content-10');
         sidebar.classList.remove('hidden');
         menu_hidden.classList.add('hidden');
-    };
+    }
 }
 
 function start() {
