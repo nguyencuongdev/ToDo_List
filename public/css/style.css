@@ -53,18 +53,18 @@ ol {
     z-index: 1;
 }
 
-.header_logo > a {
+.header_logo>a {
     display: flex;
     align-items: center;
 }
 
-.header_logo > a > img {
+.header_logo>a>img {
     width: 48px;
     height: 48px;
     margin-right: 8px;
 }
 
-.header_logo > h2 {
+.header_logo>h2 {
     color: #30a2ff;
     font-size: 2rem;
 }
@@ -77,7 +77,7 @@ ol {
     position: relative;
 }
 
-.header_search > input {
+.header_search>input {
     width: 100%;
     height: 32px;
     border-radius: 10px;
@@ -86,7 +86,7 @@ ol {
     outline: none;
 }
 
-.header_search > i {
+.header_search>i {
     position: absolute;
     font-size: 1.8rem;
     color: #30a2ff;
@@ -98,7 +98,7 @@ ol {
     padding: 0 20px;
 }
 
-.header_user > img {
+.header_user>img {
     width: 32px;
     height: 32px;
     object-fit: cover;
@@ -108,7 +108,7 @@ ol {
 }
 
 .header_user-list:hover,
-.header_user > img:hover + .header_user-list {
+.header_user>img:hover+.header_user-list {
     display: block;
 }
 
@@ -195,7 +195,7 @@ ol {
     padding: 12px 24px;
 }
 
-.icon > i {
+.icon>i {
     font-size: 2.4rem;
     color: #00c4ff;
     cursor: pointer;
@@ -224,7 +224,7 @@ ol {
     background-color: #eff6fc;
 }
 
-.sidebar_list-link > i {
+.sidebar_list-link>i {
     font-size: 2rem;
     margin-right: 8px;
 }
@@ -261,12 +261,12 @@ ol {
     margin-bottom: 4px;
 }
 
-.content_title-date-item > div {
+.content_title-date-item>div {
     display: flex;
     align-items: center;
 }
 
-.content_title-date-item > div > i {
+.content_title-date-item>div>i {
     font-size: 2.4rem;
     margin-right: 8px;
     color: #00c4ff;
@@ -283,7 +283,7 @@ ol {
     display: none;
 }
 
-.content_title-date-item > div > h4 {
+.content_title-date-item>div>h4 {
     font-size: 2rem;
     line-height: 2rem;
     color: #00c4ff;
@@ -312,12 +312,12 @@ ol {
     border-top-right-radius: 8px;
 }
 
-.content_groud-add-tilte > i {
+.content_groud-add-tilte>i {
     font-size: 1.6rem;
     color: #00c4ff;
 }
 
-.content_groud-add-tilte > input {
+.content_groud-add-tilte>input {
     height: 40px;
     flex: 1;
     margin-left: 10px;
@@ -326,7 +326,7 @@ ol {
     outline: none;
 }
 
-.content_groud-add-tilte > input::placeholder {
+.content_groud-add-tilte>input::placeholder {
     color: #00c4ff;
     font-size: 1.6rem;
 }
@@ -337,7 +337,7 @@ ol {
     height: 45px;
 }
 
-.content_groud-addd-button > div {
+.content_groud-addd-button>div {
     display: flex;
     align-items: center;
 }
@@ -419,7 +419,7 @@ ol {
     width: 100%;
 }
 
-.content_mytask-button-item.edit > i {
+.content_mytask-button-item.edit>i {
     font-size: 2rem;
     color: #00c4ff;
     border-top-left-radius: 4px;
@@ -427,7 +427,7 @@ ol {
     margin-left: 10px;
 }
 
-.content_mytask-button-item.delete > i {
+.content_mytask-button-item.delete>i {
     font-size: 2rem;
     color: red;
     border-bottom-left-radius: 4px;
@@ -489,10 +489,10 @@ ol {
     border-bottom: 1px solid #ccc;
 }
 
-.content_mytask-notcomplate-title > span,
-.content_mytask-complate-title > span,
-.content_mytask-overdue-title > span,
-.content_detail-title > span {
+.content_mytask-notcomplate-title>span,
+.content_mytask-complate-title>span,
+.content_mytask-overdue-title>span,
+.content_detail-title>span {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -505,10 +505,10 @@ ol {
     font-size: 1.4rem;
 }
 
-.content_detail-title > h4,
-.content_mytask-overdue-title > h4,
-.content_mytask-notcomplate-title > h4,
-.content_mytask-complate-title > h4 {
+.content_detail-title>h4,
+.content_mytask-overdue-title>h4,
+.content_mytask-notcomplate-title>h4,
+.content_mytask-complate-title>h4 {
     font-size: 1.4rem;
     margin-left: 8px;
 }
@@ -585,6 +585,12 @@ ol {
     border: none;
     outline: none;
     font-size: 1.4rem;
+}
+
+.content-navigation-icon {
+    font-size: 2.4rem;
+    color: #00c4ff;
+    margin-right: 10px;
 }
 
 .btn-submit {
@@ -777,12 +783,12 @@ ol {
     margin-right: 16px;
 }
 
-.content_group-date-item > label {
+.content_group-date-item>label {
     font-size: 1.4rem;
     margin-right: 8px;
 }
 
-.content_group-date-item > input {
+.content_group-date-item>input {
     height: 32px;
     border: 2px solid transparent;
     border-radius: 4px;

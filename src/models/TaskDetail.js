@@ -67,10 +67,18 @@ TaskDetail.deleteAllTaskDetail = async (id) => {
     })
 }
 
-TaskDetail.deleteTaskDetail = async (idTaskDetail) => {
-    let delete_sql = `delete from todolist.taskdetail where taskdetail.idTaskDetail = ${idTaskDetail}`;
+TaskDetail.deleteTaskDetail = async (idTaskDetail, id) => {
+    let delete_sql = `delete from todolist.taskdetail where taskdetail.idTaskDetail = ${idTaskDetail}
+    and taskdetail.id = ${id}`;
     connection.query(delete_sql, (err) => {
         err ? console.log('Xóa thất bại! task detail') : console.log('xóa thành công! task detail')
+    })
+}
+
+TaskDetail.updateTaskDetailStatus = async (id, status, idTaskDetail) => {
+    let update_sql = `update todolist.taskdetail set taskdetail.status = ${status} where taskdetail.idTaskDetail = ${idTaskDetail} and taskdetail.id = ${id}`;
+    connection.query(update_sql, (err) => {
+        err ? console.log('Cập nhật thất bại status! task detail') : console.log('Cập nhật thành công status! task detail')
     })
 }
 module.exports = TaskDetail;

@@ -4,15 +4,27 @@
             <i class="fi fi-rr-apps menu hidden" id="menu_hidden"></i>
             <div class="content_title-date-item">
                 <div>
-                    <i class="fi fi-rr-star"></i>
                     <nav class="content-navigation">
-                        <a href="/taskimportant" class="content-navigation-link">
-                            Tasks important
-                        </a>
+                        <%if(title=='mydate' ){%>
+                            <i class="fi fi-rr-cloud-sun content-navigation-icon"></i>
+                            <a href="/mydate" class="content-navigation-link">
+                                Today
+                            </a>
+                            <%}%>
+                                <% if(title=='important' ){%>
+                            <i class="fi fi-rr-star content-navigation-icon"></i>
+                            <a href="/taskimportant" class="content-navigation-link">
+                                Task important
+                            </a>
+                        <%}%>
+                        <% if(title=='alltask' ){ %>
+                            <i class="fi fi-rr-home content-navigation-icon"></i>
+                            <a href="/taskimportant" class="content-navigation-link">
+                            All Task
+                            </a>
+                        <%} %>
                         <i class="fi fi-rr-angle-small-right content-navigation-icon"></i>
-                        <a href="#" class="content-navigation-link">
-                            Task detail
-                        </a>
+                        <a href="" class="content-navigation-link">Chi tiết</a>
                     </nav>
                 </div>
                 <div class="content_title-date-detail">

@@ -16,6 +16,8 @@ const elementShowNameTask = document.querySelector('.content-name-text'),
         '.content_form-add-taskDetail',
     );
 
+let nameRoot = '';
+
 function showDateNow() {
     const elementShowDayNow = document.querySelector('#showDateNow');
     const day = new Date();
@@ -53,21 +55,21 @@ async function updateStatusFinish(event) {
     while (!elementTaskDetail.classList.contains('content_detail-item')) {
         elementTaskDetail = elementTaskDetail.parentElement;
     }
-    const index = elementTaskDetail.getAttribute('data-index');
+    const idTaskDetail = elementTaskDetail.getAttribute('data-index');
     const name = elementTaskDetail.querySelector(
         '.content_detail-name',
     ).textContent;
     const taskDetail = {
         id,
-        idTaskDetail: index,
+        idTaskDetail,
         name,
         status,
     };
     //call api to server update status task detail
-    await fetch(url + '/' + id, {
+    await fetch(url + '/detail/' + id, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index, status, id })
+        body: JSON.stringify({ idTaskDetail, status, id })
     })
     //update status task detail to UI
     if (status) playTinhTinh();
@@ -82,21 +84,21 @@ async function updateStatusNotFinish(event) {
     while (!elementTaskDetail.classList.contains('content_detail-item')) {
         elementTaskDetail = elementTaskDetail.parentElement;
     }
-    const index = elementTaskDetail.getAttribute('data-index');
+    const idTaskDetail = elementTaskDetail.getAttribute('data-index');
     const name = elementTaskDetail.querySelector(
         '.content_detail-name',
     ).textContent;
     const taskDetail = {
         id,
-        idTaskDetail: index,
+        idTaskDetail,
         name,
         status,
     };
     //call api to server update status task detail
-    await fetch(url + '/' + id, {
+    await fetch(url + '/detail/' + id, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index, status, id })
+        body: JSON.stringify({ idTaskDetail, status, id })
     })
     //update status task detail to UI
     elementTaskDetail.remove();
@@ -110,15 +112,17 @@ async function deleteTaskDetail(event) {
         elementTaskDetail = elementTaskDetail.parentElement;
     }
 
-    const index = elementTaskDetail.getAttribute('data-index');
+    const idTaskDetail = elementTaskDetail.getAttribute('data-index');
     //call api to server delete task detail
     await fetch(url + '/detail/' + id, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index, id })
+        body: JSON.stringify({ idTaskDetail, id })
     })
     //delete task detail to UI
     elementTaskDetail.remove();
+    countNumberTaskDetail--;
+    elementShowNumberTaskDetail.innerHTML = countNumberTaskDetail;
 }
 
 //function create task detail to UI
@@ -151,6 +155,10 @@ function handleAllEvent() {
         //Listen event change name task
         elementShowNameTask.addEventListener('blur', async () => {
             let name = elementShowNameTask.value;
+            if (name == '') {
+                elementShowNameTask.value = nameRoot;
+                return alert('Tên không được để trống!');
+            }
             await fetch(url + '/' + id, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
@@ -190,6 +198,8 @@ function handleAllEvent() {
             });
             createTaskDetail(elementShowlistTaskDetail, taskDetail);
             name.value = '';
+            countNumberTaskDetail++;
+            elementShowNumberTaskDetail.innerHTML = countNumberTaskDetail;
         })
 
         //listen event load page;
@@ -205,6 +215,7 @@ function handleAllEvent() {
             idTaskDetail =
                 task.ListDetail[task.ListDetail.length - 1]?.idTaskDetail ?? 0;
             countNumberTaskDetail = task.ListDetail.length;
+            nameRoot = task.name;
             elementShowNumberTaskDetail.innerHTML = countNumberTaskDetail;
         })
     } catch (err) {

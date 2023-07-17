@@ -39,10 +39,12 @@ Task.updateTaskImportant = async (id, important) => {
 }
 
 Task.updateTaskName = async (id, name) => {
-    let update_sql = `update todolist.tasks set tasks.name = '${name}' where tasks.id = ${id}`;
-    connection.query(update_sql, (err) => {
-        err ? console.log('Update thất bại! name') : console.log('Update thành công! name');
-    });
+    if (name != '') {
+        let update_sql = `update todolist.tasks set tasks.name = '${name}' where tasks.id = ${id}`;
+        connection.query(update_sql, (err) => {
+            err ? console.log('Update thất bại! name') : console.log('Update thành công! name');
+        });
+    }
 }
 
 Task.updateTaskDescription = async (id, description) => {

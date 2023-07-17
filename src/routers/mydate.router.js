@@ -14,7 +14,7 @@ router.get('/detail/:id', MyDateController.handleShowTaskDetail);
 
 //router api để lấy tasks
 router.get('/tasksapi', MyDateController.handleReadTask);
-//router apit để tạo task
+//router api để tạo task
 router.post('/tasksapi', MyDateController.handleCreateTask);
 //router api để xóa task
 router.delete('/tasksapi/:id', MyDateController.handleDeleteTask);
@@ -27,4 +27,6 @@ router.get('/tasksapi/:id', MyDateController.readTasksDetail);
 router.post('/tasksapi/:id', MyDateController.handleCreateTaskDetail);
 //router api để xóa 1 task detail
 router.delete('/tasksapi/detail/:id/', MyDateController.handleDeleteTaskDetail);
+//router api để update status 1 task detail
+router.patch('/tasksapi/detail/:id/', MyDateController.handleUpdateTaskDetail);
 module.exports = router;

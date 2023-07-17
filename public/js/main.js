@@ -258,6 +258,10 @@ function addTaskFinished(element) {
     });
     listTasksComplated.classList.remove('hidden');
     playTinhTinh();
+    countTaskNotComplate--;
+    countTaskFinish++;
+    ShowNumberTaskComplate.textContent = countTaskFinish;
+    ShowNumberTaskNotComplate.textContent = countTaskNotComplate;
 }
 
 function addTaskNotFinish(element) {
@@ -270,6 +274,10 @@ function addTaskNotFinish(element) {
     const endDate =
         element.querySelector('.content-mytask-date-end')?.value ?? Date.now();
     createTask(myTaskList, { id, name, important, startDate, endDate });
+    countTaskNotComplate++;
+    countTaskFinish--;
+    ShowNumberTaskComplate.textContent = countTaskFinish;
+    ShowNumberTaskNotComplate.textContent = countTaskNotComplate;
 }
 
 async function updatefinish(event) {
@@ -346,6 +354,8 @@ formAddTask.onsubmit = async function (e) {
                 body: JSON.stringify(task),
             });
             inputTaskElement.value = '';
+            countTaskNotComplate++;
+            ShowNumberTaskNotComplate.textContent = countTaskNotComplate;
         }
     } catch (err) {
         alert('Lỗi thêm task');
