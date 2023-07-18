@@ -1,7 +1,7 @@
 const Tasks = require('./Task.controller');
 const Task = require('../models/Task');
 
-class MyDate extends Tasks {
+class TaskToDay extends Tasks {
 
     constructor() {
         super();
@@ -16,4 +16,4 @@ class MyDate extends Tasks {
     }
 }
 
-module.exports = new MyDate();
+module.exports = new TaskToDay();
