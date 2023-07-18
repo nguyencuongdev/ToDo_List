@@ -1,8 +1,6 @@
-const Tasks = require('./Task.controller');
-const Task = require('../models/Task');
+const Task = require('./Task.controller');
 
-class MyDate extends Tasks {
-
+class AllTasks extends Task {
     constructor() {
         super();
     }
@@ -13,7 +11,7 @@ class MyDate extends Tasks {
     async handleCreateTask(req, res) {
         try {
             await super.handleCreateTask(req, res);
-            res.status(201).render('mydate', { title: 'mydate', active: 'active' });
+            res.status(201).render('alltasks', { title: 'alltask', active: 'active' });
         }
         catch (err) {
             res.status(500).json(err);
@@ -23,7 +21,7 @@ class MyDate extends Tasks {
     async handleDeleteTask(req, res) {
         try {
             await super.handleDeleteTask(req, res);
-            res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+            res.status(200).render('alltasks', { title: 'alltask', active: 'active' });
         }
         catch (err) {
             res.status(500).json(err);
@@ -33,7 +31,7 @@ class MyDate extends Tasks {
     async handleUpdateTask(req, res) {
         try {
             await super.handleUpdateTask(req, res);
-            res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+            res.status(200).render('alltasks', { title: 'alltask', active: 'active' });
         }
         catch (err) {
             res.status(500).json(err);
@@ -41,13 +39,13 @@ class MyDate extends Tasks {
     }
 
     async handleShowTaskDetail(req, res) {
-        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+        res.status(200).render('alltasks', { title: 'alltask', active: 'active' });
     }
 
     async handleCreateTaskDetail(req, res) {
         try {
             await super.handleCreateTaskDetail(req, res);
-            res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+            res.status(200).render('alltasks', { title: 'alltask', active: 'active' });
         }
         catch (err) {
             res.status(500).json(err);
@@ -57,7 +55,7 @@ class MyDate extends Tasks {
     async handleDeleteTaskDetail(req, res) {
         try {
             await super.handleDeleteTaskDetail(req, res);
-            res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+            res.status(200).render('alltasks', { title: 'alltask', active: 'active' });
         } catch (err) {
             res.status(500).json(err);
         }
@@ -67,7 +65,7 @@ class MyDate extends Tasks {
     async handleUpdateTaskDetail(req, res) {
         try {
             await super.handleUpdateTaskDetail(req, res);
-            res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+            res.status(200).render('alltasks', { title: 'alltask', active: 'active' });
         }
         catch (err) {
             res.status(500).json(err);
@@ -75,4 +73,4 @@ class MyDate extends Tasks {
     }
 }
 
-module.exports = new MyDate();
+module.exports = new AllTasks();

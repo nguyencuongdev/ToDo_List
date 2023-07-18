@@ -1,6 +1,5 @@
 const TaskDetail = {};
 const db = require('../common/databse.js');
-const Task = require('./Task.js');
 const connection = db.getConnection();
 
 TaskDetail.getTaskDetail = async (req, res) => {

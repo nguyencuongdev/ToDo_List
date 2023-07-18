@@ -1,6 +1,5 @@
 const router = require('express').Router();
-const Tasks = require('../controllers/Tasks.controller');
-const Task = require('../models/Task');
+const Tasks = require('../controllers/AllTasks.controller');
 
 //router hiển thị trang alltasks
 router.get('/', (req, res) => {

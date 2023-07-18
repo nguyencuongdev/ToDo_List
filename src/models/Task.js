@@ -3,10 +3,11 @@ const connection = db.getConnection();
 const { deleteAllTaskDetail } = require('./TaskDetail.js');
 
 const Task = {};
+
 Task.getTasks = async (req, res) => {
     connection.query('SELECT * FROM todolist.tasks', (err, result) => {
         (!err) ? res.status(200).json(result) : res.status(500).json(err);
-    });
+    })
 }
 
 Task.getTasksToDay = async (req, res) => {
@@ -18,9 +19,23 @@ Task.getTasksToDay = async (req, res) => {
         (!err) ? res.status(200).json(result) : res.status(500).json(err);
     })
 }
+
+Task.getTasksImportant = async (req, res) => {
+    let selectTask_sql = `select * from todolist.tasks where tasks.important = true`;
+    connection.query(selectTask_sql, (err, result) => {
+        err ? res.status(500).json(err) : res.status(200).json(result);
+    })
+}
+
 Task.addTask = async (task) => {
     let insert_sql = `insert into todolist.tasks(tasks.id,tasks.name,tasks.description,tasks.important,tasks.status,tasks.startDate,tasks.endDate)
         values(?,?,?,?,?,STR_TO_DATE(?,'%d-%m-%Y %H:%i'),STR_TO_DATE(?,'%d-%m-%Y %H:%i'))`;
+
+    let checkExist = await Task.checkExistOfTask(task.id);
+    while (!checkExist) {
+        task.id = Math.floor(Math.random() * (Math.pow(2, 31) - 1));
+        checkExist = await Task.checkExistOfTask(task.id);
+    }
 
     const data = await Promise.resolve([
         task.id,
@@ -35,6 +50,18 @@ Task.addTask = async (task) => {
         err ? console.log(err) : console.log('thêm thành công!');
     })
 }
+
+Task.createTaskImportant = async (task) => {
+    try {
+        task.important = true;
+        await this.addTask(task);
+        res.status(201).render('taskImportant', { title: 'important', active: 'active' });
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
+}
+
 
 Task.deleteTask = async (id) => {
     await deleteAllTaskDetail(id);

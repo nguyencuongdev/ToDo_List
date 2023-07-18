@@ -1,24 +1,24 @@
-const Task = require('../models/Task.js');
-const TaskDetail = require('../models/TaskDetail.js');
-const db = require('../common/databse.js');
-const connection = db.getConnection();
+const Task = require('../models/Task');
+const TaskDetail = require('../models/TaskDetail');
+
 
 class Tasks {
-    getTasks = async (req, res) => {
-        let selectTask_sql = `select * from todolist.tasks`;
-        connection.query(selectTask_sql, (err, result) => {
-            err ? res.status(500).json(err) : res.status(200).json(result);
-        })
+
+    constructor() {
+
     }
+
+    getTasks = Task.getTasks;
+    readTasksDetail = TaskDetail.getTaskDetail;
 
     handleCreateTask = async (req, res) => {
         try {
             let task = req.body;
             await Task.addTask(task);
-            res.status(201).render('alltasks', { title: 'alltask', active: 'active' });
+            res.status(201).json({ message: 'CreateTask success' });
         }
         catch (err) {
-            res.status(500).json(err);
+            throw new Error(err.message);
         }
     }
 
@@ -26,10 +26,10 @@ class Tasks {
         try {
             let id = req.params.id;
             await Task.deleteTask(id);
-            res.status(200).render('alltasks', { title: 'alltask', active: 'active' });
+            res.status(200).json({ message: 'DeleteTask success' });
         }
         catch (err) {
-            res.status(500).json(err);
+            throw new Error(err.message);
         }
     }
 
@@ -52,14 +52,12 @@ class Tasks {
                 let description = req.body.description;
                 await Task.updateTaskDescription(id, description);
             }
-            res.status(200).render('alltasks', { title: 'alltask', active: 'active' });
+            res.status(200).json({ message: 'update success' });
         }
         catch (err) {
-            res.status(500).json(err);
+            throw new Error(err.message);
         }
     }
-
-    readTasksDetail = TaskDetail.getTaskDetail;
 
     handleShowTaskDetail = async (req, res) => {
         res.render('taskDetail', { title: 'alltask', active: 'active' });
@@ -69,10 +67,10 @@ class Tasks {
         try {
             let taskDetail = req.body;
             await TaskDetail.addTaskDetail(taskDetail);
-            res.status(201).render('taskDetail', { title: 'alltask', active: 'active' });
+            res.status(200).json({ message: 'CreateTaskDetail success' });
         }
         catch (err) {
-            res.status(500).json(err);
+            throw new Error(err.message);
         }
     }
 
@@ -81,9 +79,9 @@ class Tasks {
             let id = req.params.id;
             let idTaskDetail = req.body.idTaskDetail;
             await TaskDetail.deleteTaskDetail(idTaskDetail, id);
-            res.status(200).render('taskDetail', { title: 'alltask', active: 'active' });
+            res.status(200).json({ message: 'DeleteTaskDetail success' });
         } catch (err) {
-            res.status(500).json(err);
+            throw new Error(err.message);
         }
     }
 
@@ -94,12 +92,12 @@ class Tasks {
             let idTaskDetail = req.body.idTaskDetail;
             let status = req.body.status;
             await TaskDetail.updateTaskDetailStatus(id, status, idTaskDetail);
-            res.status(200).render('taskDetail', { title: 'alltask', active: 'active' });
+            res.status(200).json({ message: 'UpdateTaskDetail success' });
         }
         catch (err) {
-            res.status(500).json(err);
+            throw new Error(err.message);
         }
     }
 }
 
-module.exports = new Tasks();
+module.exports = Tasks;
