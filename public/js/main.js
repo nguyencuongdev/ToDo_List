@@ -17,6 +17,7 @@ const buttonShowTaskComlated = document.querySelector(
     '.content_mytask-complate-title',
 );
 
+
 const ShowNumberTaskComplate =
     buttonShowTaskComlated.querySelector('#countTaskFinish');
 const ShowNumberTaskNotComplate = buttonShowTaskNotComplate.querySelector(
@@ -38,6 +39,23 @@ let countTaskComplate = 0;
 let countTaskNotComplate = 0;
 let countTaskOverTime = 0;
 
+const arrayElementsInURL = url.split('/');
+let stringHrefCheck = window.location.href.slice(window.location.href.lastIndexOf('/'));
+
+let listTasksOverdue = {};
+let buttonShowTaskOverdue = {};
+let ShowNumberTaskOverdue = {};
+
+if (checkUrl(stringHrefCheck)) {
+    listTasksOverdue = document.querySelector(
+        '.content_mytask-overdue',
+    );
+    buttonShowTaskOverdue = document.querySelector(
+        '.content_mytask-overdue-title',
+    );
+    ShowNumberTaskOverdue =
+        buttonShowTaskComlated.querySelector('#countTaskOverdue');
+}
 
 function ShowTasksFinished() {
     listTasksComplated.classList.toggle('hidden');
@@ -116,10 +134,10 @@ function createTask(List, task) {
     myTaskItem.setAttribute('data-index', task.id);
     myTaskItem.setAttribute('important', task.important);
     myTaskItem.classList.add('content_mytask-item');
-    myTaskItem.innerHTML = `  <div class="content_mytask-group">
-                                <h4 class="content_mytask-title" onclick=" event.stopPropagation();">${task.name}</h4>
+    myTaskItem.innerHTML = `  <div class="content_mytask-group"  onclick="showButtonTask(event)">
+                                <h4 class="content_mytask-title" onclick="event.stopPropagation();">${task.name}</h4>
                             </div>
-                            <div class="content_mytask-date">
+                            <div class="content_mytask-date"  onclick="showButtonTask(event)">
                                 <span class="content-mytask-date-start content-mytask-date-item">
                                   ${task.startDate}
                                 </span>
@@ -128,7 +146,7 @@ function createTask(List, task) {
                                    ${task.endDate}
                                 </span>
                             </div>
-                            <div title="Đánh dấu công việc quan trọng">
+                            <div class="content_mytask-item-important" title="Đánh dấu công việc quan trọng" onclick="showButtonTask(event)">
                                 <button class="important" onclick=" updateStatusTaskImportantOnUIAndServer(event,true)">
                                     <i class="fi fi-rr-star"></i>
                                 </button>
@@ -172,6 +190,8 @@ function createTask(List, task) {
     List.prepend(myTaskItem);
 }
 
+let startdateTemp;
+let enddateTemp;
 function addTaskToUI(task) {
     const id = task.id,
         name = task.name,
@@ -211,9 +231,8 @@ async function updateStatusTaskOnUIAndServer(event, status = false) {
     const id = elementTask.getAttribute('data-index'),
         name = elementTask.querySelector('.content_mytask-title').textContent,
         important = elementTask.getAttribute('important'),
-        startDate = elementTask.querySelector('.content-mytask-date-start').value,
-        endDate = elementTask.querySelector('.content-mytask-date-end').value;
-
+        startDate = elementTask.querySelector('.content-mytask-date-start').textContent,
+        endDate = elementTask.querySelector('.content-mytask-date-end').textContent;
     const task = {
         id, name, important, status, startDate, endDate
     }
@@ -251,9 +270,22 @@ function showPageDetailTask(event) {
     const id = +elementTask.getAttribute('data-index');
 
     //Phân tích chuỗi url và điều hướng đến trang đích;
-    const elementsUrl = url.split('/');
-    let urlNew = elementsUrl.slice(0, elementsUrl.length - 1).join('/');
+    let urlNew = analyzeUrl(arrayElementsInURL);
     location.href = urlNew + '/detail/' + id;
+}
+
+function analyzeUrl(arrayElementInUrl) {
+    return arrayElementInUrl.slice(0, arrayElementInUrl.length - 1).join('/');
+}
+
+function checkUrl(stringUrl) {
+    if (
+        (stringUrl === '/taskimportant')
+        || (stringUrl === '/alltasks')
+    ) {
+        return true;
+    }
+    return false;
 }
 
 async function deleteTask(event) {
@@ -281,7 +313,10 @@ async function deleteTaskOnServer(id) {
 
 function showButtonTask(event) {
     event.preventDefault();
-    const taskElement = event.target;
+    let taskElement = event.target;
+    while (!taskElement.classList.contains('content_mytask-item')) {
+        taskElement = taskElement.parentNode;
+    }
     const buttonTask = taskElement.querySelector('.content_mytask-item-button');
     buttonTask.style.display = 'block';
     function hiddenButtonTask(event) {
@@ -329,6 +364,8 @@ function countShowTaskComplateOnUI() {
 }
 
 function handleAllEvents() {
+    ShowNumberTaskComplate.innerHTML = countTaskComplate;
+    ShowNumberTaskNotComplate.innerHTML = countTaskNotComplate;
 
     //listen event submit form add task
     formAddTask.onsubmit = async function (e) {
@@ -337,6 +374,12 @@ function handleAllEvents() {
             const inputTaskElement = document.querySelector('#input_task'),
                 inputStartDate = document.querySelector('#date-start'),
                 inputEndDate = document.querySelector('#date-end');
+            let important = false;
+
+            //url = /taskimportant thì task sẽ có important = true;
+            if (checkUrl(stringHrefCheck)) {
+                important = true;
+            }
 
             if (inputTaskElement.value) {
                 idTask++;
@@ -344,7 +387,7 @@ function handleAllEvents() {
                     id: idTask,
                     name: inputTaskElement.value,
                     description: '',
-                    important: false,
+                    important,
                     status: false,
                     startDate: inputStartDate.value,
                     endDate: inputEndDate.value,
@@ -370,6 +413,9 @@ function handleAllEvents() {
             }
             //Lấy từng task trong db và hiển thị lên UI
             tasks.forEach(task => {
+                enddateTemp = new Date(task.startDate);
+                task.startDate = handleDate(new Date(task.startDate));
+                task.endDate = handleDate(new Date(task.endDate));
                 addTaskToUI(task);
                 task.status ? countShowTaskComplateOnUI() : countShowTaskNotComplateOnUI();
             })
@@ -395,6 +441,19 @@ function handleAllEvents() {
         sidebar.classList.remove('hidden');
         menu_hidden.classList.add('hidden');
     }
+}
+
+function handleDate(date) {
+    let day = date.getDate(),
+        month = date.getMonth() + 1,
+        year = date.getFullYear();
+    let hour = date.getHours(),
+        minute = date.getMinutes();
+    hour < 10 ? hour = '0' + hour : hour;
+    minute < 10 ? minute = '0' + minute : minute;
+    let stringDateFormated = `${day}-${month}-${year} ${hour}:${minute}`;
+    // console.log(stringDateFormated);
+    return stringDateFormated;
 }
 
 function start() {

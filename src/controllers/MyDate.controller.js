@@ -2,13 +2,18 @@ const MyDate = {};
 const Task = require('../models/Task');
 const TaskDetail = require('../models/TaskDetail');
 
-MyDate.handleReadTask = Task.getTasks;
+MyDate.handleReadTask = Task.getTasksToDay;
 
 MyDate.handleCreateTask = async (req, res) => {
     try {
         let task = req.body;
+        let checkExist = await Task.checkExistOfTask(task.id);
+        while (!checkExist) {
+            task.id = Math.floor(Math.random() * (Math.pow(2, 31) - 1));
+            checkExist = await Task.checkExistOfTask(task.id);
+        }
         await Task.addTask(task);
-        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+        res.status(201).render('mydate', { title: 'mydate', active: 'active' });
     }
     catch (err) {
         res.status(500).json(err);
@@ -62,7 +67,7 @@ MyDate.handleCreateTaskDetail = async (req, res) => {
     try {
         let taskDetail = req.body;
         await TaskDetail.addTaskDetail(taskDetail);
-        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+        res.status(200).render('taskDetail', { title: 'mydate', active: 'active' });
     }
     catch (err) {
         res.status(500).json(err);
@@ -74,7 +79,7 @@ MyDate.handleDeleteTaskDetail = async (req, res) => {
         let id = req.params.id;
         let idTaskDetail = req.body.idTaskDetail;
         await TaskDetail.deleteTaskDetail(idTaskDetail, id);
-        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+        res.status(200).render('taskDetail', { title: 'mydate', active: 'active' });
     } catch (err) {
         res.status(500).json(err);
     }

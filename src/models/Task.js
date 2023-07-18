@@ -8,10 +8,31 @@ Task.getTasks = async (req, res) => {
         (!err) ? res.status(200).json(result) : res.status(500).json(err);
     });
 }
+
+Task.getTasksToDay = async (req, res) => {
+    let select_sql = `SELECT *
+                        FROM todolist.tasks
+                        WHERE DATE_FORMAT(startDate, '%d-%m-%y') <= DATE_FORMAT(CURDATE(), '%d-%m-%y')
+                        AND DATE_FORMAT(endDate, '%d-%m-%y') >= DATE_FORMAT(CURDATE(), '%d-%m-%y') `;
+    connection.query(select_sql, (err, result) => {
+        (!err) ? res.status(200).json(result) : res.status(500).json(err);
+    })
+}
 Task.addTask = async (task) => {
-    let insert_sql = `insert into todolist.tasks(tasks.id,tasks.name,tasks.description,tasks.important,tasks.status) values(${task.id},'${task.name}','${task.description}',${task.important},${task.status})`;
-    connection.query(insert_sql, (err) => {
-        err ? console.log('Thêm thất bại') : console.log('thêm thành công!');
+    let insert_sql = `insert into todolist.tasks(tasks.id,tasks.name,tasks.description,tasks.important,tasks.status,tasks.startDate,tasks.endDate)
+        values(?,?,?,?,?,STR_TO_DATE(?,'%d-%m-%Y %H:%i'),STR_TO_DATE(?,'%d-%m-%Y %H:%i'))`;
+
+    const data = await Promise.resolve([
+        task.id,
+        task.name,
+        task.description,
+        task.important,
+        task.status,
+        task.startDate,
+        task.endDate
+    ])
+    connection.query(insert_sql, data, (err) => {
+        err ? console.log(err) : console.log('thêm thành công!');
     })
 }
 
@@ -54,4 +75,24 @@ Task.updateTaskDescription = async (id, description) => {
         });
     }
 }
+
+Task.checkExistOfTask = async (id) => {
+    try {
+        const select_sql = `SELECT id FROM todolist.tasks WHERE tasks.id = ${id}`;
+        const result = await new Promise((resolve, reject) => {
+            connection.query(select_sql, (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+        return result.length == 0;
+    } catch (err) {
+        console.error('Error while checking task existence:', err);
+        throw err;
+    }
+}
+
 module.exports = Task;

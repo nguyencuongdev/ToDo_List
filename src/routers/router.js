@@ -8,4 +8,5 @@ router.use('/login', require('./login.router'));
 router.use('/signup', require('./signup.router'));
 router.use('/mydate', require('./mydate.router'));
 router.use('/taskimportant', require('./taskImportant.router'));
+router.use('/alltasks', require('./alltasks.router'));
 module.exports = router;

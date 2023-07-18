@@ -371,9 +371,11 @@ ol {
 }
 
 .content_mytask-item {
+    /* display: grid;
+    grid-template-columns: repeat(3, 1fr); */
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     height: 52px;
     background-color: var(--white-color);
     margin-top: 8px;
@@ -382,6 +384,16 @@ ol {
     cursor: pointer;
     position: relative;
 }
+
+.content_mytask-date {
+    display: flex;
+    justify-content: center;
+}
+
+/* .content_mytask-item-important {
+    display: flex;
+    justify-content: flex-end;
+}  */
 
 .content_mytask-item-button {
     display: none;
@@ -394,6 +406,7 @@ ol {
     z-index: 2;
     border-radius: 4px;
 }
+
 
 .content_mytask-button-item.edit,
 .content_mytask-button-item.delete {

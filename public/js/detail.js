@@ -191,18 +191,23 @@ function handleAllEvents() {
             const name = elementAddTaskDetail.querySelector(
                 '.content_form-add-taskDetail-input',
             );
-            idTaskDetail++;
-            const taskDetail = {
-                id,
-                name: name.value,
-                status: false,
-                idTaskDetail,
-            };
-            await addTaskDetailToServer(taskDetail); //add task detail to server
-            createTaskDetail(elementShowlistTaskDetail, taskDetail); //add task detail to UI
-            name.value = '';
-            countNumberTaskDetail++;
-            elementShowNumberTaskDetail.innerHTML = countNumberTaskDetail;
+            if (name.value) {
+                idTaskDetail++;
+                const taskDetail = {
+                    id,
+                    name: name.value,
+                    status: false,
+                    idTaskDetail,
+                };
+                await addTaskDetailToServer(taskDetail); //add task detail to server
+                createTaskDetail(elementShowlistTaskDetail, taskDetail); //add task detail to UI
+                name.value = '';
+                countNumberTaskDetail++;
+                elementShowNumberTaskDetail.innerHTML = countNumberTaskDetail;
+            }
+            else {
+                alert('Tên không được để trống!');
+            }
         })
 
         //listen event load page;
