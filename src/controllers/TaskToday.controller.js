@@ -12,7 +12,7 @@ class TaskToDay extends Tasks {
     }
 
     async handleShowTaskDetail(req, res) {
-        res.status(200).render('mydate', { title: 'mydate', active: 'active' });
+        res.status(200).render('taskdetail', { title: 'tasktoday', active: 'active' });
     }
 }
 

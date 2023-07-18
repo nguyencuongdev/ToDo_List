@@ -134,7 +134,7 @@ function createTaskDetail(elementShowTaskDetail, taskDetail) {
                                                     <i class="fi fi-rr-trash"></i>
                                                 </button>
                                             </div>`;
-    if (taskDetail.status) {
+    if (+taskDetail.status) {
         taskDetailElement.addEventListener('click', updateStatusTaskDetailOnUIAndServer);
         taskDetailElement.classList.add('finish');
         elementShowTaskDetail.appendChild(taskDetailElement);
@@ -218,6 +218,7 @@ function handleAllEvents() {
             elementShowNameTask.value = task.name;
             //Show list task detail to UI
             task.ListDetail.forEach(taskDetail => {
+                console.log(taskDetail);
                 createTaskDetail(elementShowlistTaskDetail, taskDetail);
             });
             idTaskDetail =

@@ -1,32 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const MyDateController = require('../controllers/TaskToday.controller');
+const TaskToDay = require('../controllers/TaskToday.controller');
 
 //router hiển thị trang mydate
 router.get('/', (req, res) => {
-    res.render('mydate', { title: 'mydate', active: 'active' });
+    res.render('tasktoday', { title: 'tasktoday', active: 'active' });
 })
 //router hiển thị trang detail từ trang mydate
-router.get('/detail/:id', MyDateController.handleShowTaskDetail);
+router.get('/detail/:id', TaskToDay.handleShowTaskDetail);
 
 
 //router API
 
 //router api để lấy tasks
-router.get('/tasksapi', MyDateController.getTasksToDay);
+router.get('/tasksapi', TaskToDay.getTasksToDay);
 //router api để tạo task
-router.post('/tasksapi', MyDateController.handleCreateTask);
+router.post('/tasksapi', TaskToDay.handleCreateTask);
 //router api để xóa task
-router.delete('/tasksapi/:id', MyDateController.handleDeleteTask);
+router.delete('/tasksapi/:id', TaskToDay.handleDeleteTask);
 //router api để update task
-router.patch('/tasksapi/:id', MyDateController.handleUpdateTask);
+router.patch('/tasksapi/:id', TaskToDay.handleUpdateTask);
 
 //router api để lấy task detail
-router.get('/tasksapi/:id', MyDateController.readTasksDetail);
+router.get('/tasksapi/:id', TaskToDay.readTasksDetail);
 //router api để tạo task detail
-router.post('/tasksapi/:id', MyDateController.handleCreateTaskDetail);
+router.post('/tasksapi/:id', TaskToDay.handleCreateTaskDetail);
 //router api để xóa 1 task detail
-router.delete('/tasksapi/detail/:id/', MyDateController.handleDeleteTaskDetail);
+router.delete('/tasksapi/detail/:id/', TaskToDay.handleDeleteTaskDetail);
 //router api để update status 1 task detail
-router.patch('/tasksapi/detail/:id/', MyDateController.handleUpdateTaskDetail);
+router.patch('/tasksapi/detail/:id/', TaskToDay.handleUpdateTaskDetail);
 module.exports = router;
