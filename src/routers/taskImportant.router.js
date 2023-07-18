@@ -12,7 +12,7 @@ router.get('/detail/:id', TaskImportantController.handleShowTaskDetail);
 
 // router API
 //router api để lấy tasks important
-router.get('/tasksapi', TaskImportantController.getTaskImportant);
+router.get('/tasksapi', TaskImportantController.getTasksImportant);
 router.post('/tasksapi', TaskImportantController.handleCreateTask)
 router.patch('/tasksapi/:id', TaskImportantController.handleUpdateTask);
 router.delete('/tasksapi/:id', TaskImportantController.handleDeleteTask);

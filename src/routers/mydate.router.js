@@ -13,7 +13,7 @@ router.get('/detail/:id', MyDateController.handleShowTaskDetail);
 //router API
 
 //router api để lấy tasks
-router.get('/tasksapi', MyDateController.handleReadTask);
+router.get('/tasksapi', MyDateController.getTasksToDay);
 //router api để tạo task
 router.post('/tasksapi', MyDateController.handleCreateTask);
 //router api để xóa task

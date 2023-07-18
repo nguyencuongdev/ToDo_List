@@ -7,71 +7,11 @@ class TaskImportant extends Tasks {
         super();
     }
 
-    getTaskImportant = Task.getTasksImportant;
-
-
-    async handleCreateTask(req, res) {
-        try {
-            let task = req.body;
-            await Task.createTaskImportant(task);
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
+    getTasksImportant(req, res) {
+        Task.getTasksImportant(req, res);
     }
-
-    async handleDeleteTask(req, res) {
-        try {
-            await super.handleDeleteTask(req, res);
-            res.status(200).render('taskImportant', { title: 'important', active: 'active' });
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    }
-
-    async handleUpdateTask(req, res) {
-        try {
-            await super.handleUpdateTask(req, res);
-            res.status(200).render('taskImportant', { title: 'important', active: 'active' });
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    }
-
     async handleShowTaskDetail(req, res) {
         res.render('taskDetail', { title: 'important', active: 'active' });
-    }
-
-    async handleCreateTaskDetail(req, res) {
-        try {
-            await super.handleCreateTaskDetail(req, res);
-            res.status(201).render('taskDetail', { title: 'important', active: 'active' });
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    }
-
-    async handleDeleteTaskDetail(req, res) {
-        try {
-            await super.handleDeleteTaskDetail(req, res);
-            res.status(200).render('taskDetail', { title: 'important', active: 'active' });
-        } catch (err) {
-            res.status(500).json(err);
-        }
-    }
-
-
-    async handleUpdateTaskDetail(req, res) {
-        try {
-            await super.handleUpdateTaskDetail(req, res);
-            res.status(200).render('taskDetail', { title: 'important', active: 'active' });
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
     }
 }
 

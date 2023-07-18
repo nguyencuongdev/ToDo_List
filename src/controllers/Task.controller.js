@@ -8,10 +8,15 @@ class Tasks {
 
     }
 
-    getTasks = Task.getTasks;
-    readTasksDetail = TaskDetail.getTaskDetail;
+    getTasks(req, res) {
+        Task.getTasks(req, res);
+    }
 
-    handleCreateTask = async (req, res) => {
+    readTasksDetail(req, res) {
+        TaskDetail.getTaskDetail(req, res);
+    }
+
+    async handleCreateTask(req, res) {
         try {
             let task = req.body;
             await Task.addTask(task);
@@ -22,7 +27,7 @@ class Tasks {
         }
     }
 
-    handleDeleteTask = async (req, res) => {
+    async handleDeleteTask(req, res) {
         try {
             let id = req.params.id;
             await Task.deleteTask(id);
@@ -33,7 +38,7 @@ class Tasks {
         }
     }
 
-    handleUpdateTask = async (req, res) => {
+    async handleUpdateTask(req, res) {
         try {
             let id = req.params.id;
             if ("important" in req.body) {
@@ -59,22 +64,22 @@ class Tasks {
         }
     }
 
-    handleShowTaskDetail = async (req, res) => {
+    async handleShowTaskDetail(req, res) {
         res.render('taskDetail', { title: 'alltask', active: 'active' });
     }
 
-    handleCreateTaskDetail = async (req, res) => {
+    async handleCreateTaskDetail(req, res) {
         try {
             let taskDetail = req.body;
             await TaskDetail.addTaskDetail(taskDetail);
-            res.status(200).json({ message: 'CreateTaskDetail success' });
+            res.status(201).json({ message: 'CreateTaskDetail success' });
         }
         catch (err) {
             throw new Error(err.message);
         }
     }
 
-    handleDeleteTaskDetail = async (req, res) => {
+    async handleDeleteTaskDetail(req, res) {
         try {
             let id = req.params.id;
             let idTaskDetail = req.body.idTaskDetail;
@@ -86,7 +91,7 @@ class Tasks {
     }
 
 
-    handleUpdateTaskDetail = async (req, res) => {
+    async handleUpdateTaskDetail(req, res) {
         try {
             let id = req.params.id;
             let idTaskDetail = req.body.idTaskDetail;
