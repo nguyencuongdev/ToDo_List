@@ -1,5 +1,5 @@
 const LoginController = {};
-LoginController.getIndex = (req, res) => {
+LoginController.showView = (req, res) => {
     res.render('login', { layout: false });
 }
 

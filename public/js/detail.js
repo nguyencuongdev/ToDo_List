@@ -218,7 +218,6 @@ function handleAllEvents() {
             elementShowNameTask.value = task.name;
             //Show list task detail to UI
             task.ListDetail.forEach(taskDetail => {
-                console.log(taskDetail);
                 createTaskDetail(elementShowlistTaskDetail, taskDetail);
             });
             idTaskDetail =
