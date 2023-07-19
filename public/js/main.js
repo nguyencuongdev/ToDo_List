@@ -408,12 +408,14 @@ function handleAllEvents() {
         try {
             const res = await fetch(url);
             const tasks = await res.json();
-            if (tasks.length > 0) {
-                //generate id for task creat next;
-                const res2 = await fetch(url + '/generateid');
-                data = await res2.json();
-                idTask = data.id;
 
+            //generate id for task creat next;
+            const res2 = await fetch(url + '/generateid');
+            data = await res2.json();
+            idTask = data.id;
+            console.log(idTask);
+
+            if (tasks.length > 0) {
                 //Lấy từng task trong db và hiển thị lên UI
                 tasks.forEach(task => {
                     enddateTemp = new Date(task.startDate);
