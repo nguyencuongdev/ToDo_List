@@ -39,4 +39,22 @@ User.createAccount = async (account) => {
         throw new Error(err.message);
     }
 };
+
+User.getUserByUsername = async (username) => {
+    try {
+        let select_sql = `SELECT * FROM users WHERE username = ?`;
+        let data = [username];
+        return await new Promise((resolve, reject) => {
+            connection.query(select_sql, data, (err, results) => {
+                if (err) {
+                    reject(new Error('Error getting user by username: ' + err.message));
+                } else {
+                    results.length > 0 ? resolve(results[0]) : resolve(null);
+                }
+            })
+        })
+    } catch (err) {
+        throw new Error(err.message);
+    }
+}
 module.exports = User;

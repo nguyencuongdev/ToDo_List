@@ -29,6 +29,10 @@ app.get('/', (req, res) => {
 const router = require('./src/routers/router');
 app.use(router);
 
+console.log(process.env.ACCESS_TOKEN_SECRET);
+console.log(process.env.REFRESH_TOKEN_SECRET);
+console.log(process.env.REFRESH_TOKEN_LIFE);
+
 app.listen(process.env.SERVER_PORT, () => {
     console.log('Server listening on port ' + process.env.SERVER_PORT);
 });

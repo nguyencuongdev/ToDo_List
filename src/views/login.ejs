@@ -17,20 +17,12 @@
         <div class="container">
             <form action="/login" id="form_signup" method="post">
                 <h2 class="form_signup-title">Login</h2>
-                <div class="form_signup-input username">
-                    <label for="firstname" class="form_signup-label">
-                        <i class="fi fi-rr-user"></i>
-                    </label>
-                    <input type="text" class="form_signup-input-item firstname" placeholder="First Name"
-                        name="firstname" id="firstname">
-                    <input type="text" class="form_signup-input-item lastname" name="lastname" placeholder="Last Name">
-                </div>
                 <div class="form_signup-input">
                     <label for="account" class="form_signup-label">
                         <i class="fi fi-rr-portrait"></i>
                     </label>
                     <div class="form_signup-group">
-                        <input type="text id=" account" class="form_signup-input-item" name="account"
+                        <input type="text" id="account" class="form_signup-input-item" name="username"
                             placeholder="Nhập vào tên tài khoản">
                         <p class="message"></p>
                     </div>
@@ -45,6 +37,7 @@
                         <p class="message"></p>
                     </div>
                 </div>
+                <a href="/signup">Bạn chưa có tài khoản?</a>
                 <input type="submit" value="Login" id="form_signup-submit">
             </form>
             <div class="form_img">
