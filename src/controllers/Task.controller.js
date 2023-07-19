@@ -23,18 +23,20 @@ class Tasks {
             res.status(201).json({ message: 'CreateTask success' });
         }
         catch (err) {
-            throw new Error(err.message);
+            res.status(500).json({ error: err.message });
         }
     }
+
 
     async handleDeleteTask(req, res) {
         try {
             let id = req.params.id;
             await Task.deleteTask(id);
+            await TaskDetail.deleteAllTaskDetail(id);
             res.status(200).json({ message: 'DeleteTask success' });
         }
         catch (err) {
-            throw new Error(err.message);
+            res.status(500).json({ error: err.message });
         }
     }
 
@@ -60,7 +62,7 @@ class Tasks {
             res.status(200).json({ message: 'update success' });
         }
         catch (err) {
-            throw new Error(err.message);
+            res.status(500).json({ error: err.message });
         }
     }
 
@@ -75,7 +77,7 @@ class Tasks {
             res.status(201).json({ message: 'CreateTaskDetail success' });
         }
         catch (err) {
-            throw new Error(err.message);
+            res.status(500).json({ error: err.message });
         }
     }
 
@@ -86,7 +88,7 @@ class Tasks {
             await TaskDetail.deleteTaskDetail(idTaskDetail, id);
             res.status(200).json({ message: 'DeleteTaskDetail success' });
         } catch (err) {
-            throw new Error(err.message);
+            res.status(500).json({ error: err.message });
         }
     }
 
@@ -100,7 +102,16 @@ class Tasks {
             res.status(200).json({ message: 'UpdateTaskDetail success' });
         }
         catch (err) {
-            throw new Error(err.message);
+            res.status(500).json({ error: err.message });
+        }
+    }
+
+    async handleGenerateId(req, res) {
+        try {
+            let id = await Task.generateId();
+            res.status(200).json({ id });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
     }
 }

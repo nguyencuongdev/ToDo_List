@@ -1,4 +1,7 @@
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+dotenv.config();
 const SignupController = {};
 
 SignupController.showView = (req, res) => {
@@ -7,10 +10,12 @@ SignupController.showView = (req, res) => {
 
 SignupController.handleCreateAccount = async (req, res) => {
     try {
+        const stringSalt = await bcrypt.genSalt(+process.env.SALT_ROUND);
+        const hashedPassword = await bcrypt.hash(req.body.password, stringSalt);
         const account = await Promise.resolve({
-            name: req.body.firstname + '' + req.body.lastname,
+            name: req.body.firstname + ' ' + req.body.lastname,
             username: req.body.username,
-            password: req.body.password,
+            password: hashedPassword,
             createAt: new Date(),
             updateAt: new Date()
         })

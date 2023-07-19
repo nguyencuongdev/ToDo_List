@@ -13,6 +13,7 @@ router.get('/detail/:id', Tasks.handleShowTaskDetail);
 
 //router api để lấy tasks
 router.get('/tasksapi', Tasks.getTasks);
+router.get('/tasksapi/generateid', Tasks.handleGenerateId);
 //router api để tạo task
 router.post('/tasksapi', Tasks.handleCreateTask);
 //router api để xóa task

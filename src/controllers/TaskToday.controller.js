@@ -1,7 +1,7 @@
-const Tasks = require('./Task.controller');
+const TaskController = require('./Task.controller');
 const Task = require('../models/Task');
 
-class TaskToDay extends Tasks {
+class TaskToDay extends TaskController {
 
     constructor() {
         super();

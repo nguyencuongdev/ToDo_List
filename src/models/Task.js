@@ -1,12 +1,11 @@
 const db = require('../common/databse.js');
 const connection = db.getConnection();
-const { deleteAllTaskDetail } = require('./TaskDetail.js');
-
+const ExceptionDatabse = require('../common/ExceptionDatabase.js');
 const Task = {};
 
 Task.getTasks = async (req, res) => {
     connection.query('SELECT * FROM todolist.tasks', (err, result) => {
-        (!err) ? res.status(200).json(result) : res.status(500).json(err);
+        err ? res.status(500).json(err) : res.status(200).json(result);
     })
 }
 
@@ -16,7 +15,7 @@ Task.getTasksToDay = async (req, res) => {
                         WHERE DATE_FORMAT(startDate, '%d-%m-%y') <= DATE_FORMAT(CURDATE(), '%d-%m-%y')
                         AND DATE_FORMAT(endDate, '%d-%m-%y') >= DATE_FORMAT(CURDATE(), '%d-%m-%y') `;
     connection.query(select_sql, (err, result) => {
-        (!err) ? res.status(200).json(result) : res.status(500).json(err);
+        (err) ? res.status(500).json(err) : res.status(200).json(result);
     })
 }
 
@@ -28,96 +27,139 @@ Task.getTasksImportant = async (req, res) => {
 }
 
 Task.addTask = async (task) => {
-    let insert_sql = `insert into todolist.tasks(tasks.id,tasks.name,tasks.description,tasks.important,tasks.status,tasks.startDate,tasks.endDate)
-        values(?,?,?,?,?,STR_TO_DATE(?,'%d-%m-%Y %H:%i'),STR_TO_DATE(?,'%d-%m-%Y %H:%i'))`;
-
-    let checkExist = await Task.checkExistOfTask(task.id);
-    while (!checkExist) {
-        task.id = Math.floor(Math.random() * (Math.pow(2, 31) - 1));
-        checkExist = await Task.checkExistOfTask(task.id);
+    try {
+        let insert_sql = `insert into todolist.tasks(tasks.id,tasks.name,tasks.description,tasks.important,tasks.status,tasks.startDate,tasks.endDate)
+            values(?,?,?,?,?,STR_TO_DATE(?,'%d-%m-%Y %H:%i'),STR_TO_DATE(?,'%d-%m-%Y %H:%i'))`;
+        const data = await Promise.resolve([
+            task.id,
+            task.name,
+            task.description,
+            task.important,
+            task.status,
+            task.startDate,
+            task.endDate
+        ])
+        await new Promise((resolve, reject) => {
+            connection.query(insert_sql, data, (err) => {
+                if (err) reject(new ExceptionDatabse('Lỗi add task'));
+                console.log('Add thành công!');
+                resolve();
+            })
+        })
     }
-
-    const data = await Promise.resolve([
-        task.id,
-        task.name,
-        task.description,
-        task.important,
-        task.status,
-        task.startDate,
-        task.endDate
-    ])
-    connection.query(insert_sql, data, (err) => {
-        err ? console.log(err) : console.log('thêm thành công!');
-    })
+    catch (err) {
+        throw err;
+    }
 }
 
 Task.createTaskImportant = async (task) => {
     try {
         task.important = true;
-        await this.addTask(task);
-        res.status(201).render('taskImportant', { title: 'important', active: 'active' });
+        await Task.addTask(task);
     }
     catch (err) {
-        res.status(500).json(err);
+        throw err;
     }
 }
 
 
 Task.deleteTask = async (id) => {
-    await deleteAllTaskDetail(id);
-    let delete_sql = `delete from todolist.tasks where tasks.id = ${id}`;
-    connection.query(delete_sql, (err) => {
-        err ? console.log('Xóa thất bại') : console.log('xóa thành công!')
-    })
+    try {
+        let delete_sql = `delete from todolist.tasks where tasks.id = ${id}`;
+        await new Promise((resolve, reject) => {
+            connection.query(delete_sql, (err) => {
+                if (err) reject(new ExceptionDatabse('Lỗi delete task'));
+                console.log('Delete thành công!');
+                resolve();
+            })
+        })
+    }
+    catch (err) {
+        throw err;
+    }
 }
 
 Task.updateTaskStatus = async (id, status) => {
-    let update_sql = `update todolist.tasks set tasks.status = ${status} where tasks.id = ${id}`;
-    connection.query(update_sql, (err) => {
-        err ? console.log('Update thất bại! status') : console.log('Update thành công! status');
-    });
+    try {
+        let update_sql = `update todolist.tasks set tasks.status = ${status} where tasks.id = ${id}`;
+        await new Promise((resolve, reject) => {
+            connection.query(update_sql, (err) => {
+                if (err) reject(new ExceptionDatabse('Lỗi update status'));
+                console.log('Update thành công! status');
+                resolve();
+            });
+        })
+    }
+    catch (err) {
+        throw err;
+    }
 }
 
 Task.updateTaskImportant = async (id, important) => {
-    let update_sql = `update todolist.tasks set tasks.important = ${important} where tasks.id = ${id}`;
-    connection.query(update_sql, (err) => {
-        err ? console.log('Update thất bại! important') : console.log('Update thành công! important');
-    });
+    try {
+        let update_sql = `update todolist.tasks set tasks.important = ${important} where tasks.id = ${id}`;
+        await new Promise((resolve, reject) => {
+            connection.query(update_sql, (err) => {
+                if (err) reject(new ExceptionDatabse('Lỗi update important'));
+                console.log('Update thành công! important');
+                resolve();
+            })
+        })
+    }
+    catch (err) {
+        throw err;
+    }
 }
 
 Task.updateTaskName = async (id, name) => {
-    if (name != '') {
-        let update_sql = `update todolist.tasks set tasks.name = '${name}' where tasks.id = ${id}`;
-        connection.query(update_sql, (err) => {
-            err ? console.log('Update thất bại! name') : console.log('Update thành công! name');
-        });
+    try {
+        if (name != '') {
+            let update_sql = `update todolist.tasks set tasks.name = '${name}' where tasks.id = ${id}`;
+            await new Promise((resolve, reject) => {
+                connection.query(update_sql, (err) => {
+                    if (err) reject(new ExceptionDatabse('Lỗi update name'));
+                    console.log('Update thành công! name');
+                    resolve();
+                })
+            })
+        }
+    }
+    catch (err) {
+        throw err;
     }
 }
 
 Task.updateTaskDescription = async (id, description) => {
-    if (description != '') {
-        let update_sql = `update todolist.tasks set tasks.description = '${description}' where tasks.id = ${id}`;
-        connection.query(update_sql, (err) => {
-            err ? console.log('Update thất bại! description') : console.log('Update thành công!, description');
-        });
+    try {
+        if (description != '') {
+            let update_sql = `update todolist.tasks set tasks.description = '${description}' where tasks.id = ${id}`;
+            await new Promise((resolve, reject) => {
+                connection.query(update_sql, (err) => {
+                    if (err) reject(new ExceptionDatabse('Lỗi update description'));
+                    console.log('Update thành công! description');
+                    resolve();
+                })
+            })
+        }
+    }
+    catch (err) {
+        throw err;
     }
 }
 
-Task.checkExistOfTask = async (id) => {
+Task.generateId = async () => {
     try {
-        const select_sql = `SELECT id FROM todolist.tasks WHERE tasks.id = ${id}`;
+        let select_sql = `SELECT id FROM todolist.tasks order by id desc limit 1`;
         const result = await new Promise((resolve, reject) => {
             connection.query(select_sql, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
+                if (err) reject(new Exception(err.message));
+                else resolve(result);
             })
         })
-        return result.length == 0;
-    } catch (err) {
-        console.error('Error while checking task existence:', err);
+        if (result.length == 0) return 0;
+        return result[0].id;
+    }
+    catch (err) {
         throw err;
     }
 }

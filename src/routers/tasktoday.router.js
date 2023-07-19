@@ -14,6 +14,7 @@ router.get('/detail/:id', TaskToDay.handleShowTaskDetail);
 
 //router api để lấy tasks
 router.get('/tasksapi', TaskToDay.getTasksToDay);
+router.get('/tasksapi/generateid', TaskToDay.handleGenerateId);
 //router api để tạo task
 router.post('/tasksapi', TaskToDay.handleCreateTask);
 //router api để xóa task

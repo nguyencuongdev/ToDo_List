@@ -1,9 +1,6 @@
 const database = require('../common/databse');
 const connection = database.getConnection();
-const ExceptionDatabase = require('../common/Exception');
-const dotenv = require('dotenv');
-dotenv.config();
-const bcrypt = require('bcrypt');
+const ExceptionDatabase = require('../common/ExceptionDatabase');
 
 
 const User = {};
@@ -12,14 +9,10 @@ User.createAccount = async (account) => {
     try {
         let insert_sql = `INSERT INTO users (name, username, password, createAt, updateAt)
                  VALUES (?, ?, ?, ?, ?)`;
-
-        const stringSalt = await bcrypt.genSalt(10);
-
-        const hashedPassword = await bcrypt.hash(account.password, stringSalt);
         const data = [
             account.name,
             account.username,
-            password = hashedPassword,
+            account.password,
             account.createAt,
             account.updateAt,
         ];
@@ -47,9 +40,9 @@ User.getUserByUsername = async (username) => {
         return await new Promise((resolve, reject) => {
             connection.query(select_sql, data, (err, results) => {
                 if (err) {
-                    reject(new Error('Error getting user by username: ' + err.message));
+                    reject(new ExceptionDatabase('Error getting user by username: ' + err.message));
                 } else {
-                    results.length > 0 ? resolve(results[0]) : resolve(null);
+                    results.length > 0 ? resolve(results[0]) : reject(null);
                 }
             })
         })

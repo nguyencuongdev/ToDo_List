@@ -168,7 +168,7 @@ function createTask(List, task) {
 
     //Check task important ? if important = true => show button off important
     //and else show button on important
-    if (task.important) {
+    if (+task.important) {
         myTaskItem.querySelector('.important').classList.add('hidden');
         myTaskItem.querySelector('.noimportant').classList.remove('hidden');
     }
@@ -377,7 +377,7 @@ function handleAllEvents() {
             let important = false;
 
             //url = /taskimportant thì task sẽ có important = true;
-            if (checkUrl(stringHrefCheck)) {
+            if (stringHrefCheck === '/taskimportant') {
                 important = true;
             }
 
@@ -409,18 +409,22 @@ function handleAllEvents() {
             const res = await fetch(url);
             const tasks = await res.json();
             if (tasks.length > 0) {
-                idTask = tasks[tasks.length - 1].id;
+                //generate id for task creat next;
+                const res2 = await fetch(url + '/generateid');
+                data = await res2.json();
+                idTask = data.id;
+
+                //Lấy từng task trong db và hiển thị lên UI
+                tasks.forEach(task => {
+                    enddateTemp = new Date(task.startDate);
+                    task.startDate = handleDate(new Date(task.startDate));
+                    task.endDate = handleDate(new Date(task.endDate));
+                    addTaskToUI(task);
+                    task.status ? countShowTaskComplateOnUI() : countShowTaskNotComplateOnUI();
+                })
             }
-            //Lấy từng task trong db và hiển thị lên UI
-            tasks.forEach(task => {
-                enddateTemp = new Date(task.startDate);
-                task.startDate = handleDate(new Date(task.startDate));
-                task.endDate = handleDate(new Date(task.endDate));
-                addTaskToUI(task);
-                task.status ? countShowTaskComplateOnUI() : countShowTaskNotComplateOnUI();
-            })
         } catch (err) {
-            console.log(err);
+            console.log('Tài nguyễn không có sẵn');
         }
     })
 
@@ -452,7 +456,6 @@ function handleDate(date) {
     hour < 10 ? hour = '0' + hour : hour;
     minute < 10 ? minute = '0' + minute : minute;
     let stringDateFormated = `${day}-${month}-${year} ${hour}:${minute}`;
-    // console.log(stringDateFormated);
     return stringDateFormated;
 }
 

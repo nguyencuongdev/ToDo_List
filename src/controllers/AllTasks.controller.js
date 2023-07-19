@@ -1,6 +1,6 @@
-const Task = require('./Task.controller');
+const TaskController = require('./Task.controller');
 
-class AllTasks extends Task {
+class AllTasks extends TaskController {
     constructor() {
         super();
     }

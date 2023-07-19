@@ -8,6 +8,7 @@ dotenv.config();
 
 const app = express();
 
+//use middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,16 +23,9 @@ app.set('layout', 'main.ejs')
 //set folder static
 app.use('/static', express.static(path.join(__dirname, '/public')));
 
-app.get('/', (req, res) => {
-    res.redirect('/login');
-})
-
+//set router
 const router = require('./src/routers/router');
 app.use(router);
-
-console.log(process.env.ACCESS_TOKEN_SECRET);
-console.log(process.env.REFRESH_TOKEN_SECRET);
-console.log(process.env.REFRESH_TOKEN_LIFE);
 
 app.listen(process.env.SERVER_PORT, () => {
     console.log('Server listening on port ' + process.env.SERVER_PORT);
