@@ -20,7 +20,8 @@ SignupController.handleCreateAccount = async (req, res) => {
             updateAt: new Date()
         })
         await User.createAccount(account);
-        res.status(200).json('Account created successfully!');
+        console.log('Account created successfully!');
+        res.status(201).render('login', { layout: false, message: '' });
     }
     catch (err) {
         res.status(500).json({ message: err.message });
